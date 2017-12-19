@@ -30,7 +30,7 @@ fname2 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
 fname3 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
 fname4 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
 
-xmin, xmax = (300., 800.)  # deg
+xmin, xmax = (300., 800.)  # arcsec
 ymin, ymax = (-500., -100.)
 
 #======================================================================|
@@ -54,15 +54,12 @@ mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)  # ~3s
 
 # Rotate(CCW)
-ang = mapb.meta['crota2']  # ~ 180
 order = 3  # Test: 3 is the best
-# rotation_matrix:
-# [[ cos(-ang), sin(-ang)],
-#  [-sin(-ang), cos(-ang)]]
+print('Fixing image axes...')
 mapbx = mapbx.rotate(order=order)
 mapby = mapby.rotate(order=order)
 mapbz = mapbz.rotate(order=order)
-print('Rotation angle = %f deg (CCW)' % -ang)
+print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
 
 # Get the center ('crpix1', 'crpix2') - First pixel is number 1.
 # mask = np.isfinite(mapbz.data)  # non-nan values
@@ -106,21 +103,16 @@ mapbz.draw_grid(axes=ax1, grid_spacing=20*u.deg, color='w', linestyle=':')
 mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec, axes=ax1, color='yellow', linewidth=1.5)
 # ax1.set_title(mapbz.latex_name, y=1.05);
 plt.clim(-2000., 2000.)
-fig1.savefig(path+'/'+'plothmi.png', dpi=200)
+fig1.savefig(path+'/'+'plothmi_disk.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (12, 12)
 
-# Threshold for vectors
-bzsmall = 100.
-smapbx.data[abs(smapbz.data) < bzsmall] = 0.
-smapby.data[abs(smapbz.data) < bzsmall] = 0.
-
 fig2 = plt.figure(figsize=(9, 6), dpi=100)
 ax2 = fig2.add_subplot(111, projection=smapbz)
 im2 = plot_map(ax2, smapbz)
-plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, limit=500., cmap='binary',
-          scale_units='xy', scale=1/0.04, minlength=0.02)
+plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=20., vmax=500., cmap='binary',
+          scale_units='xy', scale=1/0.05, minlength=0.02)
 
 # Properties
 smapbz.draw_grid(axes=ax2, grid_spacing=10*u.deg, color='yellow', linestyle=':')

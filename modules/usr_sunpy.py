@@ -113,7 +113,7 @@ def plot_map_p(ax, X, Y, smap, grid=False, cmap='gray', **kwargs):
 
 #======================================================================|
 def plot_vmap(ax, mapu, mapv, mapc,
-              iskip=10, jskip=10, limit=1000., cmap='binary',
+              iskip=10, jskip=10, cmin=0., vmax=1000., cmap='binary',
               scale_units='xy', scale=1/0.05, minlength=0.05, width=0.003,
               headlength=6, headwidth=5, headaxislength=3,
               **kwargs):
@@ -128,7 +128,8 @@ def plot_vmap(ax, mapu, mapv, mapc,
     * mapv: Map of Vy
     * mapc: Map for setting color
             (reset mapc.data first to change to color function)
-    * limit: max length of (Vx, Vy), same unit as Vx
+    * cmin: |C|_min
+    * vmax: |V|_max
     * kwargs: quiver_kwargs(matplotlib)
     
     [Reference]
@@ -137,26 +138,28 @@ def plot_vmap(ax, mapu, mapv, mapc,
     '''
     iskip = int(iskip); jskip = int(jskip)
     dimy, dimx = mapc.data.shape
-    
     pixmin = (0., 0.)  # pixel
     pixmax = u.Quantity(mapc.dimensions).value
     x0 = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Tx).to(u.deg).value  # deg
     x1 = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Tx).to(u.deg).value
     y0 = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Ty).to(u.deg).value
     y1 = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Ty).to(u.deg).value
+    
     # Resample
-#    rmapu = mapu.resample(u.Quantity([nx, ny], u.pix)).data.T
-#    rmapv = mapv.resample(u.Quantity([nx, ny], u.pix)).data.T
-#    rmapc = np.sign(mapc.resample(u.Quantity([nx, ny], u.pix)).data.T)
     rmapu = mapu.data.T[::iskip, ::jskip]
     rmapv = mapv.data.T[::iskip, ::jskip]
-    rmapc = np.sign(mapc.data.T)[::iskip, ::jskip]
+    rmapc = mapc.data.T[::iskip, ::jskip]
+    
     # Clip
     mag = np.sqrt(rmapu**2 + rmapv**2)
-    mask = np.where(mag > limit)
-    rmapu[mask] = rmapu[mask] * (limit/mag[mask])
-    rmapv[mask] = rmapv[mask] * (limit/mag[mask])
-
+    mask = np.where(abs(rmapc) < cmin)
+    rmapu[mask] = 0.
+    rmapv[mask] = 0.
+    mask = np.where(mag > vmax)
+    rmapu[mask] = rmapu[mask] * (vmax/mag[mask])
+    rmapv[mask] = rmapv[mask] * (vmax/mag[mask])
+    rmapc = np.sign(rmapc)
+    
     X, Y = np.mgrid[x0:x1:dimx*1j, y0:y1:dimy*1j][:, ::iskip, ::jskip]  # deg
     im = ax.quiver(X, Y, rmapu, rmapv,
                    rmapc, cmap=cmap,
@@ -171,7 +174,7 @@ def plot_vmap(ax, mapu, mapv, mapc,
 
 #======================================================================|
 def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
-                iskip=10, jskip=10, limit=1000., cmap='binary',
+                iskip=10, jskip=10, cmin=0., vmax=1000., cmap='binary',
                 scale_units='xy', scale=1/0.05, minlength=0.05, width=0.003,
                 headlength=6, headwidth=5, headaxislength=3,
                 **kwargs):
@@ -187,7 +190,8 @@ def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
     * mapv: map of Vy
     * mapc: map for setting color
             (reset mapc.data first to change to color function)
-    * limit: max length of (Vx, Vy), same unit as Vx
+    * cmin: |C|_min
+    * vmax: |V|_max
     * kwargs: quiver_kwargs(matplotlib)
     
     [Reference]
@@ -210,29 +214,29 @@ def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
     Bc = np.deg2rad(tmp.lat.value)  # The latitude of the center of the image.
     
     # Resample
-    fmapu = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapu.data.T)
-    fmapv = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapv.data.T)
-    fmapc = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapc.data.T)
     ax1, ax2, ay1, ay2 = proj_matrix(P, L0, B0, Bc, Lc, 2)
     hx = np.linspace(X.min(), X.max(), dimx)
     hy = np.linspace(Y.min(), Y.max(), dimy)
     hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
     ix = ax1 * hx + ay1 * hy
     iy = ax2 * hx + ay2 * hy
-    
-    rmapu = np.array(map(fmapu, ix.flatten(), iy.flatten())).reshape((dimx, dimy))
-    rmapv = np.array(map(fmapv, ix.flatten(), iy.flatten())).reshape((dimx, dimy))
-    rmapc = np.array(map(fmapc, ix.flatten(), iy.flatten())).reshape((dimx, dimy))
-    rmapu = rmapu[::iskip, ::jskip]
-    rmapv = rmapv[::iskip, ::jskip]
-    rmapc = np.sign(rmapc)[::iskip, ::jskip]
+    fu = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapu.data.T)
+    fv = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapv.data.T)
+    fc = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapc.data.T)
+    rmapu = np.array(map(fu, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
+    rmapv = np.array(map(fv, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
+    rmapc = np.array(map(fc, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
     
     # Clip
     mag = np.sqrt(rmapu**2 + rmapv**2)
-    mask = np.where(mag > limit)
-    rmapu[mask] = rmapu[mask] * (limit/mag[mask])
-    rmapv[mask] = rmapv[mask] * (limit/mag[mask])
-
+    mask = np.where(abs(rmapc) < cmin)
+    rmapu[mask] = 0.
+    rmapv[mask] = 0.
+    mask = np.where(mag > vmax)
+    rmapu[mask] = rmapu[mask] * (vmax/mag[mask])
+    rmapv[mask] = rmapv[mask] * (vmax/mag[mask])
+    rmapc = np.sign(rmapc)
+    
     im = ax.quiver(hx[::iskip, ::jskip], hy[::iskip, ::jskip], rmapu, rmapv,
                    rmapc, cmap=cmap,
                    angles='uv', pivot='tail',
@@ -251,8 +255,8 @@ def image_to_helio(*smap):
     Coords: (x, y)_helio = A22.T.I dot (x, y)_image
     
     [Return] list
-    smap -> (x_h, y_h)
-    smapx, smapy, smapz -> (smapx_h, smapy_h, smapz_h)
+             smap -> (x_h, y_h)
+             smapx, smapy, smapz -> (smapx_h, smapy_h, smapz_h)
     
     [Reference]
     http://link.springer.com/10.1007/BF00158295
