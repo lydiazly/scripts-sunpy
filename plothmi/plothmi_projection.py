@@ -55,7 +55,7 @@ mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)  # ~3s
 
 # Rotate(CCW)
 order = 3  # Test: 3 is the best
-print('Fixing image axes...')
+print('Correcting image axes...')
 mapbx = mapbx.rotate(order=order)
 mapby = mapby.rotate(order=order)
 mapbz = mapbz.rotate(order=order)
