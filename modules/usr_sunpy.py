@@ -6,8 +6,8 @@ Funtions for sunpy.
 [Reference] http://docs.sunpy.org/en/stable/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
-# 2017-12-19 modified by Lydia
-
+# 2018-01-23 modified by Lydia
+from __future__ import division, print_function
 import astropy.units as u
 from copy import deepcopy
 import matplotlib.pyplot as plt
@@ -48,7 +48,7 @@ def read_sdo(filename):
     smap = sunpy.map.Map(filename)
     print('%s\t%s' %
           (os.path.basename(filename),
-           map(int, u.Quantity(smap.dimensions).value)))
+           list(map(int, u.Quantity(smap.dimensions).value))))
     return smap
 
 #======================================================================|
@@ -223,9 +223,9 @@ def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
     fu = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapu.data.T)
     fv = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapv.data.T)
     fc = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapc.data.T)
-    rmapu = np.array(map(fu, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
-    rmapv = np.array(map(fv, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
-    rmapc = np.array(map(fc, ix.flatten(), iy.flatten())).reshape((dimx, dimy))[::iskip, ::jskip]
+    rmapu = np.array(list(map(fu, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+    rmapv = np.array(list(map(fv, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+    rmapc = np.array(list(map(fc, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
     
     # Clip
     mag = np.sqrt(rmapu**2 + rmapv**2)

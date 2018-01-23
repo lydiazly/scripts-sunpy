@@ -5,7 +5,9 @@ Read FITS data & Plot
 [Import] usr_sunpy
 '''
 # 2017-12-11 written by Lydia
-# 2017-12-19 modified by Lydia
+# 2018-01-23 modified by Lydia
+
+from __future__ import division, print_function
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,8 +21,8 @@ import gc, os
 
 try:
     import usr_sunpy
-except ImportError, e:
-    print("ERROR: Module 'usr_sunpy' doesn't exist!")
+except ImportError as e:
+    print("Impor tError:", e)
     exit(1)
 from usr_sunpy import *
 
@@ -56,9 +58,10 @@ mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)  # ~3s
 # Rotate(CCW)
 order = 3  # Test: 3 is the best
 print('Correcting image axes...')
-mapbx = mapbx.rotate(order=order)
-mapby = mapby.rotate(order=order)
-mapbz = mapbz.rotate(order=order)
+with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
+    mapbx = mapbx.rotate(order=order)
+    mapby = mapby.rotate(order=order)
+    mapbz = mapbz.rotate(order=order)
 print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
 
 # Get the center ('crpix1', 'crpix2') - First pixel is number 1.
@@ -89,7 +92,7 @@ smapbx = mapbx.submap(bl, tr)
 smapby = mapby.submap(bl, tr)
 smapbz = mapbz.submap(bl, tr)
 print('Submap: %s = %s arcsec' %
-      (map(int, u.Quantity(smapbz.dimensions).value), [[xmin, xmax], [ymin, ymax]]))
+      (list(map(int, u.Quantity(smapbz.dimensions).value)), [[xmin, xmax], [ymin, ymax]]))
 
 #======================================================================|
 # Plot
