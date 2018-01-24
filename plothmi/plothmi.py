@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 '''
 Read FITS data & Plot
-[Import] usr_sunpy
+[Packages] numpy, matplotlib, astropy, sunpy, usr_sunpy
+[Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-01-23 modified by Lydia
+# 2018-01-24 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -22,7 +23,7 @@ import gc, os
 try:
     import usr_sunpy
 except ImportError as e:
-    print("Impor tError:", e)
+    print("Import Error:", e)
     exit(1)
 from usr_sunpy import *
 

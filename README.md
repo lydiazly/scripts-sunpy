@@ -1,44 +1,58 @@
-#SunPy scripts & examples
-[ Update: 2017-12-19 ]
+## SunPy scripts & examples
+> Tested: Python 2.7 & Python 3.4, Ubuntu 14.04 LTS
 
+* *Update: 2018-01-24*
+
+<br />
+
+###### Download
 
 ``` sh
 git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 ```
 
-###Python version
+---
 
-Tested with python 2.7.
+#### Install [<u>SunPy</u>](http://sunpy.org)
 
-###Install [**SunPy**](http://sunpy.org/)
+    pip install sunpy[all]
 
-``` sh
-pip install sunpy[all] pytest
-```
+#### Import user modules
 
-###User modules
+Append&nbsp;&nbsp;<span style="color:#000000">*scripts-sunpy/modules*</span>&nbsp;&nbsp;
+into&nbsp;&nbsp;<span style="color:#445eac">$PYTHONPATH</span>.
 
-Append **modules/** to **PYTHONPATH**.
-
-e.g. Bash and sh:
-
-Add
+&nbsp;&nbsp;*e.g.* For Bash users, in ~/.bashrc:
 
 ``` sh
-export PYTHONPATH=$PYTHONPATH:<SOME_PATH>/scripts-sunpy/modules
+export PYTHONPATH=$PYTHONPATH:<YOUR_PATH>/scripts-sunpy/modules
 ```
- 
-to ~/.bashrc
-<br /><br />
-######Usage
+
+Import:
 
 ``` python
 >>> from usr_sunpy import *
 ```
 
-######Get help
+To get help:
 
 ``` python
 >>> import usr_sunpy
 >>> help(usr_sunpy)
 ```
+
+---
+
+#### Examples
+
+Scripts:
+
+    python plothmi.py
+
+IPython notebooks:
+
+    ipython notebook example_plothmi.ipynb
+
+&nbsp;&nbsp;&nbsp;&nbsp;or
+
+    jupyter notebook example_plothmi.ipynb
