@@ -20,7 +20,7 @@ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 #### Import user modules
 
 Append&nbsp;&nbsp;<span style="color:#000000">*scripts-sunpy/modules*</span>&nbsp;&nbsp;
-into&nbsp;&nbsp;<span style="color:#445eac">$PYTHONPATH</span>.
+into&nbsp;&nbsp;<span style="color:#445eac">*$PYTHONPATH*</span>.
 
 &nbsp;&nbsp;*e.g.* For Bash users, in ~/.bashrc:
 

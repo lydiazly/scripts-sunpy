@@ -115,7 +115,7 @@ iskip, jskip = (12, 12)
 fig2 = plt.figure(figsize=(9, 6), dpi=100)
 ax2 = fig2.add_subplot(111, projection=smapbz)
 im2 = plot_map(ax2, smapbz)
-plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=20., vmax=500., cmap='binary',
+plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=100., vmax=500., cmap='binary',
           scale_units='xy', scale=1/0.05, minlength=0.02)
 
 # Properties
