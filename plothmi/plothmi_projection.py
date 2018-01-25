@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Read FITS data & Projection & Plot
-[Packages] numpy, matplotlib, astropy, sunpy, usr_sunpy
+[Import] numpy, matplotlib, astropy, sunpy, usr_sunpy
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-19 written by Lydia
@@ -54,7 +54,7 @@ mapby = deepcopy(mapb)
 mapbz = deepcopy(mapb)
 mapbx.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.cos((mapa.data + 270.) * dtor)
 mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.) * dtor)
-mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)  # ~3s
+mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
 
 # Rotate(CCW)
 order = 3  # Test: 3 is the best
@@ -72,14 +72,14 @@ print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
 # pcen = (0.5 * (imin + imax) * u.pix, 0.5 * (jmin + jmax) * u.pix)
 pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pix)
 center = mapbz.pixel_to_world(*pcenter)
-print('[Image_center] (%.3f, %.3f)pixel = (%7.4f, %7.4f)arcsec  (lon, lat) = (%8.5f, %8.5f)deg' %
+print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       ((mapbz.dimensions.x.value-1.)/2., (mapbz.dimensions.y.value-1.)/2.,
          mapbz.center.Tx.value, mapbz.center.Ty.value,
          mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
-print('[ Disk_center] (%.3f, %.3f)pixel = (%7.4f, %7.4f)arcsec  (lon, lat) = (%8.5f, %8.5f)deg' %
+print('[Disk_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       (pcenter[0].value, pcenter[1].value, center.Tx.value, center.Ty.value,
        center.heliographic_stonyhurst.lon.value, center.heliographic_stonyhurst.lat.value))
-print('[ Observation] (lon, lat, radius) = (%g deg, %g deg, %g m)' %
+print('[Observation]\n\t(lon, lat, radius) = (%g deg, %g deg, %g m)' %
       (mapbz.heliographic_longitude.value, mapbz.heliographic_latitude.value,
        mapbz.observer_coordinate.radius.value))
 
@@ -113,10 +113,11 @@ plot_map(ax1, mapbz)
 
 # Properties
 mapbz.draw_grid(axes=ax1, grid_spacing=20*u.deg, color='w', linestyle=':')
-mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec, axes=ax1, color='yellow', linewidth=1.5)
-# ax1.set_title(mapbz.latex_name, y=1.05);
+mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec,
+                     axes=ax1, color='yellow', linewidth=1.5)
+# ax1.set_title(mapbz.latex_name, y=1.05)
 plt.clim(-2000., 2000.)
-fig1.savefig(path+'/'+'plothmi_projection_disk.png', dpi=200)
+fig1.savefig(path+'/'+'projection_disk.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (12, 12)
@@ -129,30 +130,30 @@ plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=100., vmax
 
 # Properties
 smapbz.draw_grid(axes=ax2, grid_spacing=10*u.deg, color='yellow', linestyle=':')
-ax2.set_title(mapbz.latex_name, y=1.09)
-plt.subplots_adjust(right=0.8)  # Reduce the value to shift the colorbar right
+ax2.set_title(mapbz.latex_name+' (submap)', y=1.09)
+plt.subplots_adjust(right=0.8)  # Reduce the value to move the colorbar to the right
 im2.set_clim(-2000., 2000.)
 
-fig2.savefig(path+'/'+'plothmi_projection_sub.png', dpi=200)
+fig2.savefig(path+'/'+'projection_sub.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (10, 10)
 
 fig3 = plt.figure(figsize=(9, 5), dpi=100)
 ax3 = fig3.add_subplot(111)
-im3 = plot_map_p(ax3, hx, hy, smapbz_h)
-plot_vmap_p(ax3, hx, hy, smapbx_h, smapby_h, smapbz_h, 
-            iskip=iskip, jskip=jskip, cmin=100., vmax=300., cmap='binary',
-            scale_units='xy', scale=1/0.03, minlength=0.05)
+im3 = plot_map(ax3, smapbz_h, hx, hy)
+plot_vmap(ax3, smapbx_h, smapby_h, smapbz_h, hx, hy,
+          iskip=iskip, jskip=jskip, cmin=100., vmax=300., cmap='binary',
+          scale_units='xy', scale=1/0.03, minlength=0.05)
 
 # Properties
-#ax3.grid(True, ls=':', color='yellow', alpha=0.8)
+ax3.grid(True, ls=':', alpha=0.8)
 ax3.set_title(mapbz.latex_name+' (projected)', y=1.02);
 plt.subplots_adjust(right=0.9)  # Reduce the value to shift the colorbar right
 ax3.set_xlim((-170,170))
 ax3.set_ylim((-110,100))
-im3.set_clim((-2500,2500))
+im3.set_clim((-2000,2000))
 
-fig3.savefig(path+'/'+'plothmi_projection_sub.png', dpi=200)
+fig3.savefig(path+'/'+'projection_sub_projected.png', dpi=200)
 #----------------------------------------------------------------------|
 plt.show()

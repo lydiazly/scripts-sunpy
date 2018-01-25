@@ -36,9 +36,18 @@ Import:
 
 To get help:
 
+In python:
+
 ``` python
 >>> import usr_sunpy
 >>> help(usr_sunpy)
+>>> dir(usr_sunpy)
+```
+
+In Shell:
+
+``` sh
+pydoc usr_sunpy
 ```
 
 ---

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 '''
-Funtions for sunpy.
-[Import] matplotlib, numpy, sunpy
-[Reference] http://docs.sunpy.org/en/stable/code_ref/map.html
+User functions.
+[SunPy Version: 0.8.2]
+[Reference] http://docs.sunpy.org/en/v0.8.2/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
 # 2018-01-23 modified by Lydia
 from __future__ import division, print_function
+__all__ = ['read_sdo', 'plot_map', 'plot_vmap', 'image_to_helio', 'proj_matrix']
 import astropy.units as u
 from copy import deepcopy
 import matplotlib.pyplot as plt
@@ -15,22 +16,19 @@ from scipy import interpolate
 import sunpy.map
 from sunpy.visualization import axis_labels_from_ctype
 import os
-
 #======================================================================|
 def read_sdo(filename):
     '''
     -------------------------------------------------------------------
-    Read from a FITS file.
-    
-    [Return] A Map object
+    Just read from a FITS file & print the filename and dimensions.
     
     [Properties]
-    * data: ndarray - A 2d list or ndarray containingthe map data.
-                          data[i,j]: j from the bottom, i from te left.
-    * meta: dict - A dictionary of the original image headr tags.
-    * dimensions: PixelPair - x axis first, y axis second.
-                              Use 'u.Quantity(mapbz.dimensions).value'
-                              to get the numerical values.
+            data - A 2D numpy `ndarray` containingthe map data.
+                   data[i, j]: j from the bottom, i from te left.
+            meta - A `dict` of the original image headr tags.
+    
+    [Return] A sunpy `GenericMap` object
+    
     [Notes]
     A number of the properties of this class are returned as two-value named
     tuples that can either be indexed by position ([0] or [1]) or be
@@ -41,114 +39,135 @@ def read_sdo(filename):
     axis1 corresponds to the coordinate axis for x and axis2 corresponds to y.
     
     [Reference]
-    http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects
+    help(sunpy.map.GenericMap)
+    http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#using-map-objects
     --------------------------------------------------------------------
     '''
     smap = sunpy.map.Map(filename)
-    print('%s\t%s' %
-          (os.path.basename(filename),
-           list(map(int, u.Quantity(smap.dimensions).value))))
+    print('%s\t%s' % (os.path.basename(filename),
+          list(map(int, u.Quantity(smap.dimensions).value))))
     return smap
 
 #======================================================================|
-def plot_map(ax, smap, grid=False, **kwargs):
+def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
     '''
     --------------------------------------------------------------------
-    Plot the map object using matplotlib, in a method equivalent to imshow()
-    using nearest neighbour interpolation.
+    Plot image.
     
-    [Return] matplotlib image
+    [Plot Function]
+      plot_map(ax, smap, **kwargs)       -> `pcolormesh` from matplotlib
+      plot_map(ax, smap, X, Y, **kwargs) -> `imshow` from matplotlib
+    
+    [Return] matplotlib image object
     
     [Parameters]
-    * smap: Map
-    kwargs:
-    - plot_kwargs(sunpy): annotate, axes, title
-    - imshow_kwargs(matplotlib): kwargs
+           ax - A matplotlib axes object
+         smap - A sunpy `GenericMap`
+      *coords - two 2D numpy `ndarrays`
+      **kwargs
+      - sunpy_kwargs: annotate, axes, title
+      - matplotlib_kwargs:
+          plot_map(ax, smap, **kwargs)       -> kwargs of `pcolormesh`
+          plot_map(ax, smap, X, Y, **kwargs) -> kwargs of `imshow`
     
     [Reference]
-    http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
+    http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
     --------------------------------------------------------------------
     '''
-    im = smap.plot(annotate=True, **kwargs)
+    if not isinstance(smap, sunpy.map.mapbase.GenericMap):
+        raise TypeError("smap should be a sunpy GenericMap.")
+    if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
+        raise ValueError("*coord should be two 2D numpy ndarrays.")
+    # Plot
+    if not coords:
+        im = smap.plot(annotate=True, cmap=cmap, **kwargs)
+    else:
+        X, Y = coords
+        im = ax.pcolormesh(X, Y, smap.data.T, cmap=cmap, **kwargs)
+        ax.set_title(smap.latex_name, y=1.02)
+        ax.set_xlabel('X (arcsec)')
+        ax.set_ylabel('Y (arcsec)')
     ax.set_aspect(1)
     ax.grid(grid)
     ax.set_autoscale_on(False)  # Disable autoscaling from other plots
-    plt.subplots_adjust(left=0.1, bottom=0.11, right=0.9, top=0.88)  # x0, y0, x1, y1 (default = [0.125, 0.11, 0.9, 0.88])
-    cax = plt.axes([0.9-0.015, 0.11, 0.03*0.8, 0.77])  # [x=(x1+pad), y=y0, w=ratio*(x1-x0), h=(y1-y0)]
+    plt.subplots_adjust(left=0.1, bottom=0.11, right=0.9, top=0.88)  # xmin, ymin, xmax, ymax (default = [0.125, 0.11, 0.9, 0.88])
+    cax = plt.axes([0.9-0.015, 0.11, 0.03*0.8, 0.77])  # [x=(xmax+pad), y=ymin, w=ratio*(xmax-xmin), h=(ymax-ymin)]
     plt.colorbar(im, cax=cax)
     return im
 
 #======================================================================|
-def plot_map_p(ax, X, Y, smap, grid=False, cmap='gray', **kwargs):
-    '''
-    --------------------------------------------------------------------
-    Plot the map object using matplotlib, in a method equivalent to imshow()
-    using nearest neighbour interpolation.
-    
-    [Return] matplotlib image
-    
-    [Parameters]
-    * X, Y: 2D ndarrays
-    * smap: Map
-    kwargs:
-    - plot_kwargs(sunpy): annotate, axes, title
-    - pcolormesh_kwargs(matplotlib): kwargs
-    
-    [Reference]
-    http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
-    --------------------------------------------------------------------
-    '''
-    im = ax.pcolormesh(X, Y, smap.data.T, cmap=cmap, **kwargs)
-    ax.set_aspect(1)
-    ax.grid(grid, ls=':')
-    ax.set_autoscale_on(False)  # Disable autoscaling from other plots
-    ax.set_title(smap.latex_name, y=1.02)
-    ax.set_xlabel('X (arcsec)')
-    ax.set_ylabel('Y (arcsec)')
-    plt.subplots_adjust(left=0.1, bottom=0.11, right=0.9, top=0.88)  # x0, y0, x1, y1 (default = [0.125, 0.11, 0.9, 0.88])
-    cax = plt.axes([0.9-0.025, 0.11, 0.03*0.8, 0.77])  # [x=(x1+pad), y=y0, w=ratio*(x1-x0), h=(y1-y0)]
-    plt.colorbar(im, cax=cax)
-    return im
-
-#======================================================================|
-def plot_vmap(ax, mapu, mapv, mapc,
+def plot_vmap(ax, mapu, mapv, mapc, *coords,
               iskip=10, jskip=10, cmin=0., vmax=1000., cmap='binary',
               scale_units='xy', scale=1/0.05, minlength=0.05, width=0.003,
               headlength=6, headwidth=5, headaxislength=3,
               **kwargs):
     '''
     --------------------------------------------------------------------
-    Vector plot using quiver in matplotlib.
+    Vector plot.
     
-    [Return] matplotlib image
+    [Plot Function] `quiver` from matplotlib
     
     [Parameters]
-    * mapu: Map of Vx
-    * mapv: Map of Vy
-    * mapc: Map for setting color
-            (reset mapc.data first to change to color function)
-    * cmin: |C|_min
-    * vmax: |V|_max
-    * kwargs: quiver_kwargs(matplotlib)
+    - ax: matplotlib axes object
+    - mapu: a sunpy `GenericMap` of Vector_x
+    - mapv: a sunpy `GenericMap` of Vector_y
+    - mapc: a sunpy `GenericMap` to set color values
+    - *coords: two 2D numpy ndarrays - X, Y
+    - cmin: mapc.data < cmin -> set to zero
+    - vmax: norm(Vector) > vmax -> set to vmax
+    - **kwargs: kwargs of quiver()
+    
+    [Return] matplotlib image object
     
     [Reference]
     https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
     --------------------------------------------------------------------
     '''
+    if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in (mapu, mapv, mapc)):
+        raise TypeError("mapu, mapv, mapc should be sunpy GenericMaps.")
+    if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
+        raise ValueError("*coord should be two 2D numpy ndarrays.")
+    
     iskip = int(iskip); jskip = int(jskip)
     dimy, dimx = mapc.data.shape
-    pixmin = (0., 0.)  # pixel
-    pixmax = u.Quantity(mapc.dimensions).value
-    x0 = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Tx).to(u.deg).value  # deg
-    x1 = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Tx).to(u.deg).value
-    y0 = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Ty).to(u.deg).value
-    y1 = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Ty).to(u.deg).value
-    
     # Resample
-    rmapu = mapu.data.T[::iskip, ::jskip]
-    rmapv = mapv.data.T[::iskip, ::jskip]
-    rmapc = mapc.data.T[::iskip, ::jskip]
-    
+    if not coords:
+        pixmin = (0., 0.)  # pixel
+        pixmax = u.Quantity(mapc.dimensions).value
+        xmin = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Tx).to(u.deg).value  # deg
+        xmax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Tx).to(u.deg).value
+        ymin = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Ty).to(u.deg).value
+        ymax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Ty).to(u.deg).value
+        rmapu = mapu.data.T[::iskip, ::jskip]
+        rmapv = mapv.data.T[::iskip, ::jskip]
+        rmapc = mapc.data.T[::iskip, ::jskip]
+        X, Y = np.mgrid[xmin:xmax:dimx*1j, ymin:ymax:dimy*1j][:, ::iskip, ::jskip]  # deg
+    else:
+        X, Y = coords
+        P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
+        L0 = np.deg2rad(mapc.heliographic_longitude.value)  # The longitude of the center of the disk.
+        B0 = np.deg2rad(mapc.heliographic_latitude.value)  # The latitude of the center of the disk.
+        dx, dy = (mapc.meta['cdelt1'], mapc.meta['cdelt2'])  # arcsec/pix
+        xmin = -dx * (dimx-1)/2.  # Set (0, 0) at the center of the image.
+        ymin = -dy * (dimy-1)/2.
+        xmax = dx * (dimx-1)/2.
+        ymax = dy * (dimy-1)/2.
+        tmp = mapc.pixel_to_world(*((dimx-1)/2., (dimy-1)/2.)*u.pix).transform_to('heliographic_stonyhurst')
+        Lc = np.deg2rad(tmp.lon.value)  # The longitude of the center of the image.
+        Bc = np.deg2rad(tmp.lat.value)  # The latitude of the center of the image.
+        ax1, ax2, ay1, ay2 = proj_matrix(P, L0, B0, Bc, Lc, 2)
+        hx = np.linspace(X.min(), X.max(), dimx)
+        hy = np.linspace(Y.min(), Y.max(), dimy)
+        hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
+        ix = ax1 * hx + ay1 * hy
+        iy = ax2 * hx + ay2 * hy
+        fu = interpolate.RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapu.data.T)
+        fv = interpolate.RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapv.data.T)
+        fc = interpolate.RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapc.data.T)
+        rmapu = np.array(list(map(fu, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+        rmapv = np.array(list(map(fv, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+        rmapc = np.array(list(map(fc, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+        X = hx[::iskip, ::jskip]; Y = hy[::iskip, ::jskip]
     # Clip
     mag = np.sqrt(rmapu**2 + rmapv**2)
     mask = np.where(abs(rmapc) < cmin)
@@ -158,86 +177,10 @@ def plot_vmap(ax, mapu, mapv, mapc,
     rmapu[mask] = rmapu[mask] * (vmax/mag[mask])
     rmapv[mask] = rmapv[mask] * (vmax/mag[mask])
     rmapc = np.sign(rmapc)
-    
-    X, Y = np.mgrid[x0:x1:dimx*1j, y0:y1:dimy*1j][:, ::iskip, ::jskip]  # deg
-    im = ax.quiver(X, Y, rmapu, rmapv,
-                   rmapc, cmap=cmap,
-                   angles='uv', pivot='tail',
-                   scale_units=scale_units, scale=scale,
-                   minlength=minlength, width=width,
-                   headlength=headlength, headwidth=headwidth, headaxislength=headaxislength,
-                   transform=ax.get_transform('world'),
-                   **kwargs)
-    im.set_clim(-1, 1)
-    return im
-
-#======================================================================|
-def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
-                iskip=10, jskip=10, cmin=0., vmax=1000., cmap='binary',
-                scale_units='xy', scale=1/0.05, minlength=0.05, width=0.003,
-                headlength=6, headwidth=5, headaxislength=3,
-                **kwargs):
-    '''
-    --------------------------------------------------------------------
-    Vector plot using quiver in matplotlib(for projected maps).
-    
-    [Return] matplotlib image
-    
-    [Parameters]
-    * X, Y: 2D ndarrays
-    * mapu: map of Vx
-    * mapv: map of Vy
-    * mapc: map for setting color
-            (reset mapc.data first to change to color function)
-    * cmin: |C|_min
-    * vmax: |V|_max
-    * kwargs: quiver_kwargs(matplotlib)
-    
-    [Reference]
-    https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
-    --------------------------------------------------------------------
-    '''
-    iskip = int(iskip); jskip = int(jskip)
-    
-    P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
-    L0 = np.deg2rad(mapc.heliographic_longitude.value)  # The longitude of the center of the disk.
-    B0 = np.deg2rad(mapc.heliographic_latitude.value)  # The latitude of the center of the disk.
-    dimy, dimx = mapc.data.shape
-    dx, dy = (mapc.meta['cdelt1'], mapc.meta['cdelt2'])  # arcsec/pix
-    x0 = -dx * (dimx-1)/2.  # Set x=0, y=0 at the center of the image.
-    y0 = -dy * (dimy-1)/2.
-    x1 = dx * (dimx-1)/2.
-    y1 = dy * (dimy-1)/2.
-    tmp = mapc.pixel_to_world(*((dimx-1)/2., (dimy-1)/2.)*u.pix).transform_to('heliographic_stonyhurst')
-    Lc = np.deg2rad(tmp.lon.value)  # The longitude of the center of the image.
-    Bc = np.deg2rad(tmp.lat.value)  # The latitude of the center of the image.
-    
-    # Resample
-    ax1, ax2, ay1, ay2 = proj_matrix(P, L0, B0, Bc, Lc, 2)
-    hx = np.linspace(X.min(), X.max(), dimx)
-    hy = np.linspace(Y.min(), Y.max(), dimy)
-    hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
-    ix = ax1 * hx + ay1 * hy
-    iy = ax2 * hx + ay2 * hy
-    fu = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapu.data.T)
-    fv = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapv.data.T)
-    fc = interpolate.RectBivariateSpline(np.linspace(x0, x1, dimx), np.linspace(y0, y1, dimy), mapc.data.T)
-    rmapu = np.array(list(map(fu, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
-    rmapv = np.array(list(map(fv, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
-    rmapc = np.array(list(map(fc, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
-    
-    # Clip
-    mag = np.sqrt(rmapu**2 + rmapv**2)
-    mask = np.where(abs(rmapc) < cmin)
-    rmapu[mask] = 0.
-    rmapv[mask] = 0.
-    mask = np.where(mag > vmax)
-    rmapu[mask] = rmapu[mask] * (vmax/mag[mask])
-    rmapv[mask] = rmapv[mask] * (vmax/mag[mask])
-    rmapc = np.sign(rmapc)
-    
-    im = ax.quiver(hx[::iskip, ::jskip], hy[::iskip, ::jskip], rmapu, rmapv,
-                   rmapc, cmap=cmap,
+    # Plot
+    if not coords: kwargs['transform'] = ax.get_transform('world')
+    im = ax.quiver(X, Y, rmapu, rmapv, rmapc,
+                   cmap=cmap,
                    angles='uv', pivot='tail',
                    scale_units=scale_units, scale=scale,
                    minlength=minlength, width=width,
@@ -250,33 +193,41 @@ def plot_vmap_p(ax, X, Y, mapu, mapv, mapc,
 def image_to_helio(*smap):
     '''
     -------------------------------------------------------------------
-    Vector: (U, V, W)_helio = A33 dot (U, V, W)_image
-    Coords: (x, y)_helio = A22.T.I dot (x, y)_image
+    Transform maps from image-coordinates to helio-coordinates.
+    Unit: arcsec
+    Matrix: A22 or A33 get from *usr_sunpy.proj_matrix*
+    
+    [Parameters] *smap: 1 or 3 args, sunpy GenericMaps
     
     [Return] list
-             smap -> (x_h, y_h)
-             smapx, smapy, smapz -> (smapx_h, smapy_h, smapz_h)
+    - smap => (x_h, y_h) numpy ndarrays
+    - smapx, smapy, smapz => (smapx_h, smapy_h, smapz_h) sunpy GenericMaps
     
     [Reference]
     http://link.springer.com/10.1007/BF00158295
+    http://docs.sunpy.org/en/latest/code_ref/coordinates.html#sunpy-coordinates
     --------------------------------------------------------------------
     '''
+    if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
+        raise TypeError("smap or (smapx, smapy, smapz) should be sunpy GenericMaps.")
+    
     P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
     L0 = np.deg2rad(smap[-1].heliographic_longitude.value)  # The longitude of the center of the disk.
     B0 = np.deg2rad(smap[-1].heliographic_latitude.value)  # The latitude of the center of the disk.
     dimy, dimx = smap[-1].data.shape
     dx, dy = (smap[-1].meta['cdelt1'], smap[-1].meta['cdelt2'])  # arcsec/pix
-    x0 = -dx * (dimx-1)/2.  # Set x=0, y=0 at the center of the image.
-    y0 = -dy * (dimy-1)/2.
+    xmin = -dx * (dimx-1)/2.  # Set x=0, y=0 at the center of the image.
+    ymin = -dy * (dimy-1)/2.
     tmp = smap[-1].pixel_to_world(*((dimx-1)/2., (dimy-1)/2.)*u.pix).transform_to('heliographic_stonyhurst')
     Lc = np.deg2rad(tmp.lon.value)  # The longitude of the center of the image.
     Bc = np.deg2rad(tmp.lat.value)  # The latitude of the center of the image.
     
-    ix, iy = np.mgrid[0:dimx-1:dimx*1j, 0:dimy-1:dimy*1j]
-    ix *= dx; ix += x0
-    iy *= dy; iy += y0
+    ix, iy = np.mgrid[0:dimx-1:dimx*1j, 0:dimy-1:dimy*1j]  # image-coordinates
+    ix *= dx; ix += xmin
+    iy *= dy; iy += ymin
     
     ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3 = proj_matrix(P, L0, B0, Bc, Lc)
+    
     if len(smap) == 1:  # Image transformation
         [[cx1, cx2], [cy1, cy2]] = np.array(np.mat([[ax1, ay1], [ax2, ay2]]).I)
         hx = cx1 * ix + cx2 * iy
@@ -291,17 +242,16 @@ def image_to_helio(*smap):
         hmapz.data[:] = az1 * smap[0].data + az2 * smap[1].data + az3 * smap[2].data
         return hmapx, hmapy, hmapz
     else:
-        print('Warning: The number of variables must be 1 or 3! Doing nothing.')
-        return
+        raise ValueError('The number of arguments must be 1 or 3.')
 
 #======================================================================|
 def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     '''
-    Vector: (U, V, W)_helio = A33 dot (U, V, W)_image
-    Coords: (x, y)_image = A22.T dot (x, y)_helio
+    For coords:     (x, y)_helio = A22.T.I dot (x, y)_image
+    For vectors: (U, V, W)_helio = A33 dot (U, V, W)_image
     
-    [Return] dim=2: ax1, ax2, ay1, ay2
-             dim=3: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+    [Return] default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+               dim=2: ax1, ax2, ay1, ay2
     
     [Parameters]
     *  P: The angle of the northern extremity, CCW from the north point of the disk.
@@ -310,14 +260,13 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     * Lc: The longitude of the the referenced point.
     * Bc: The latitude of the referenced point.
     '''
-    if len(dim) == 0: dim = (3,)
     ax1 =  -np.sin(B0) * np.sin(P) * np.sin(Lc - L0) + np.cos(P) * np.cos(Lc - L0)
     ax2 =   np.sin(B0) * np.cos(P) * np.sin(Lc - L0) + np.sin(P) * np.cos(Lc - L0)
     ay1 = (-np.sin(Bc) * (np.sin(B0) * np.sin(P) * np.cos(Lc - L0) + np.cos(P) * np.sin(Lc - L0))
           - np.cos(Bc) *  np.cos(B0) * np.sin(P))
     ay2 = ( np.sin(Bc) * (np.sin(B0) * np.cos(P) * np.cos(Lc - L0) - np.sin(P) * np.sin(Lc - L0))
           + np.cos(Bc) *  np.cos(B0) * np.cos(P))
-    if dim[0] == 2:
+    if dim and dim[0] == 2:
         return ax1, ax2, ay1, ay2
     else:
         ax3 =  -np.cos(B0) * np.sin(Lc - L0)
