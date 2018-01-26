@@ -41,7 +41,6 @@ In python:
 ``` python
 >>> import usr_sunpy
 >>> help(usr_sunpy)
->>> dir(usr_sunpy)
 ```
 
 In Shell:

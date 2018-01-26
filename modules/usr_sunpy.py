@@ -5,7 +5,7 @@ User functions.
 [Reference] http://docs.sunpy.org/en/v0.8.2/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
-# 2018-01-23 modified by Lydia
+# 2018-01-26 modified by Lydia
 from __future__ import division, print_function
 __all__ = ['read_sdo', 'plot_map', 'plot_vmap', 'image_to_helio', 'proj_matrix']
 import astropy.units as u
@@ -19,13 +19,13 @@ import os
 #======================================================================|
 def read_sdo(filename):
     '''
-    -------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     Just read from a FITS file & print the filename and dimensions.
     
     [Properties]
-            data - A 2D numpy `ndarray` containingthe map data.
-                   data[i, j]: j from the bottom, i from te left.
-            meta - A `dict` of the original image headr tags.
+      data - A 2D numpy `ndarray` containingthe map data.
+             data[i, j]: j from the bottom, i from te left.
+      meta - A `dict` of the original image headr tags.
     
     [Return] A sunpy `GenericMap` object
     
@@ -41,7 +41,7 @@ def read_sdo(filename):
     [Reference]
     help(sunpy.map.GenericMap)
     http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#using-map-objects
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     '''
     smap = sunpy.map.Map(filename)
     print('%s\t%s' % (os.path.basename(filename),
@@ -51,28 +51,28 @@ def read_sdo(filename):
 #======================================================================|
 def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
     '''
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     Plot image.
     
     [Plot Function]
       plot_map(ax, smap, **kwargs)       -> `pcolormesh` from matplotlib
       plot_map(ax, smap, X, Y, **kwargs) -> `imshow` from matplotlib
     
-    [Return] matplotlib image object
-    
     [Parameters]
-           ax - A matplotlib axes object
-         smap - A sunpy `GenericMap`
-      *coords - two 2D numpy `ndarrays`
-      **kwargs
-      - sunpy_kwargs: annotate, axes, title
-      - matplotlib_kwargs:
-          plot_map(ax, smap, **kwargs)       -> kwargs of `pcolormesh`
-          plot_map(ax, smap, X, Y, **kwargs) -> kwargs of `imshow`
+    - ax: A matplotlib axes object
+    - smap: A sunpy `GenericMap`
+    - *coords: Two 2D numpy `ndarrays`
+    - **kwargs:
+      sunpy_kwargs: annotate, axes, title
+      matplotlib_kwargs:
+        plot_map(ax, smap, **kwargs)       -> kwargs of `pcolormesh`
+        plot_map(ax, smap, X, Y, **kwargs) -> kwargs of `imshow`
+    
+    [Return] A matplotlib image object
     
     [Reference]
     http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     '''
     if not isinstance(smap, sunpy.map.mapbase.GenericMap):
         raise TypeError("smap should be a sunpy GenericMap.")
@@ -102,7 +102,7 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
               headlength=6, headwidth=5, headaxislength=3,
               **kwargs):
     '''
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     Vector plot.
     
     [Plot Function] `quiver` from matplotlib
@@ -113,15 +113,15 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
     - mapv: a sunpy `GenericMap` of Vector_y
     - mapc: a sunpy `GenericMap` to set color values
     - *coords: two 2D numpy ndarrays - X, Y
-    - cmin: mapc.data < cmin -> set to zero
-    - vmax: norm(Vector) > vmax -> set to vmax
-    - **kwargs: kwargs of quiver()
+    - cmin: mapc.data < cmin => set to zero
+    - vmax: norm(Vector) > vmax => set to vmax
+    - **kwargs: kwargs of `quiver`
     
-    [Return] matplotlib image object
+    [Return] A matplotlib image object
     
     [Reference]
     https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     '''
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in (mapu, mapv, mapc)):
         raise TypeError("mapu, mapv, mapc should be sunpy GenericMaps.")
@@ -192,21 +192,22 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
 #======================================================================|
 def image_to_helio(*smap):
     '''
-    -------------------------------------------------------------------
-    Transform maps from image-coordinates to helio-coordinates.
+    ----------------------------------------------------------------------------
+    Transform maps from image-coordinate to helio-coordinate.
+    Helo-coordinate: Helioprojective (Cartesian) system
     Unit: arcsec
     Matrix: A22 or A33 get from *usr_sunpy.proj_matrix*
     
     [Parameters] *smap: 1 or 3 args, sunpy GenericMaps
     
-    [Return] list
+    [Return] A `list` with:
     - smap => (x_h, y_h) numpy ndarrays
     - smapx, smapy, smapz => (smapx_h, smapy_h, smapz_h) sunpy GenericMaps
     
     [Reference]
     http://link.springer.com/10.1007/BF00158295
     http://docs.sunpy.org/en/latest/code_ref/coordinates.html#sunpy-coordinates
-    --------------------------------------------------------------------
+    ----------------------------------------------------------------------------
     '''
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
         raise TypeError("smap or (smapx, smapy, smapz) should be sunpy GenericMaps.")
@@ -222,7 +223,7 @@ def image_to_helio(*smap):
     Lc = np.deg2rad(tmp.lon.value)  # The longitude of the center of the image.
     Bc = np.deg2rad(tmp.lat.value)  # The latitude of the center of the image.
     
-    ix, iy = np.mgrid[0:dimx-1:dimx*1j, 0:dimy-1:dimy*1j]  # image-coordinates
+    ix, iy = np.mgrid[0:dimx-1:dimx*1j, 0:dimy-1:dimy*1j]  # image-coordinate
     ix *= dx; ix += xmin
     iy *= dy; iy += ymin
     
@@ -247,18 +248,22 @@ def image_to_helio(*smap):
 #======================================================================|
 def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     '''
-    For coords:     (x, y)_helio = A22.T.I dot (x, y)_image
+    ----------------------------------------------------------------------------
+    For coords: (x, y)_helio = A22.T.I dot (x, y)_image
     For vectors: (U, V, W)_helio = A33 dot (U, V, W)_image
     
-    [Return] default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
-               dim=2: ax1, ax2, ay1, ay2
+    [Return]
+      default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+      dim=2: ax1, ax2, ay1, ay2
     
     [Parameters]
-    *  P: The angle of the northern extremity, CCW from the north point of the disk.
-    * L0: The longitude of the center of the disk.
-    * B0: The latitude of the center of the disk.
-    * Lc: The longitude of the the referenced point.
-    * Bc: The latitude of the referenced point.
+    - P: The angle of the northern extremity,
+         CCW from the north point of the disk.
+    - L0: The longitude of the center of the disk.
+    - B0: The latitude of the center of the disk.
+    - Lc: The longitude of the the referenced point.
+    - Bc: The latitude of the referenced point.
+    ----------------------------------------------------------------------------
     '''
     ax1 =  -np.sin(B0) * np.sin(P) * np.sin(Lc - L0) + np.cos(P) * np.cos(Lc - L0)
     ax2 =   np.sin(B0) * np.cos(P) * np.sin(Lc - L0) + np.sin(P) * np.cos(Lc - L0)
