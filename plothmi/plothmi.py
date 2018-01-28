@@ -6,7 +6,7 @@ Read FITS data & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-01-24 modified by Lydia
+# 2018-01-28 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -19,6 +19,7 @@ import sunpy.map
 
 from copy import deepcopy
 import gc, os
+# import time
 
 try:
     import usr_sunpy
@@ -40,7 +41,7 @@ ymin, ymax = (-500., -100.)
 # Read data
 
 print('[Path] %s' % path)
-print('Reading files...')
+print('Reading data...')
 mapb = read_sdo(fname1)
 mapi = read_sdo(fname2)
 mapa = read_sdo(fname3)
@@ -57,19 +58,22 @@ mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
 
 # Rotate(CCW)
-order = 3  # Test: 3 is the best
+# This function will remove old CROTA keywords from the header.
+order = 1  # Test: 1 or 3 is ok
 print('Correcting image axes...')
+# start = time.time()
 with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
     mapbx = mapbx.rotate(order=order)
     mapby = mapby.rotate(order=order)
     mapbz = mapbz.rotate(order=order)
 print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
+# print(time.time() - start)
 
-# Get the center ('crpix1', 'crpix2') - First pixel is number 1.
-# mask = np.isfinite(mapbz.data)  # non-nan values
+# Check the center ('crpix1', 'crpix2') - First pixel is number 1.
+# mask = np.isfinite(mapbz.data)  # Get the center by finite values
 # jmin, jmax = (mask.nonzero()[0].min(), mask.nonzero()[0].max())
 # imin, imax = (mask.nonzero()[1].min(), mask.nonzero()[1].max())
-# pcen = (0.5 * (imin + imax) * u.pix, 0.5 * (jmin + jmax) * u.pix)
+# pcenter = (0.5 * (imin + imax) * u.pix, 0.5 * (jmin + jmax) * u.pix)
 pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pix)
 center = mapbz.pixel_to_world(*pcenter)
 print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
@@ -92,7 +96,7 @@ tr = SkyCoord(xmax*u.arcsec, ymax*u.arcsec, frame=mapbz.coordinate_frame)
 smapbx = mapbx.submap(bl, tr)
 smapby = mapby.submap(bl, tr)
 smapbz = mapbz.submap(bl, tr)
-print('Submap: %s = %s arcsec' %
+print('\nSubmap: %s = %s arcsec' %
       (list(map(int, u.Quantity(smapbz.dimensions).value)), [[xmin, xmax], [ymin, ymax]]))
 
 #======================================================================|
@@ -122,7 +126,7 @@ plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=100., vmax
 
 # Properties
 smapbz.draw_grid(axes=ax2, grid_spacing=10*u.deg, color='yellow', linestyle=':')
-ax2.set_title(mapbz.latex_name+' (submap)', y=1.09)
+ax2.set_title(mapbz.latex_name+' (submap)', y=1.1)
 plt.subplots_adjust(right=0.8)  # Reduce the value to move the colorbar to the right
 im2.set_clim(-2000., 2000.)
 
