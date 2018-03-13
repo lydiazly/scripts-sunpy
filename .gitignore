@@ -2,4 +2,6 @@
 *.pyc
 *.png
 *.ipynb_checkpoints/
-*.__pycache__/
+*__pycache__/
+*tmp/
+

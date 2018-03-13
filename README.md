@@ -1,7 +1,7 @@
 ## SunPy scripts & examples
-> Tested: Python 2.7 & Python 3.4, Ubuntu 14.04 LTS
+> Tested: SunPy(0.8.5), Astropy(2.0.4), Python 2.7 & Python 3.4, Ubuntu 14.04 LTS
 
-* *Update: 2018-01-24*
+* *Update: 2018-03-13*
 
 <br />
 

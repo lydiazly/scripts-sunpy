@@ -1,0 +1,25 @@
+TROUBLESHOOTING
+----------------
+
+* 注意安装和使用的 python 和 pip 版本.
+
+* 推荐安装到当前用户.
+设置方法:
+1. 配置环境变量 $PYTHONPATH 为当前用户使用的路径(例如在 .bashrc 中设置).
+2. 检查包安装的路径:
+python -m site
+其中 USER_SITE 即为当前用户使用包安装路径.
+3. 使用 pip 安装或更新时加上 --user 选项.
+
+* Astropy 3.0 及之后版本不再支持 Python<3.5,
+安装 SunPy 时需指定 Astropy 版本, 例如:
+pip install sunpy[all] "astropy<3.0"
+
+* 出现'Could not find a version that satisfies the requirement dateutil':
+1. 先安装或更新 sunpy(无参数), 生成 sunpy-X.X.X.dist-info 目录,
+2. 将相应文件的 dateutil 替换为 python-dateutil:
+假设python版本3.4, sunpy安装在当前用户路径(使用 pip show sunpy 查看路径),
+cd ~/.local/lib/python3.4/site-packages/sunpy-X.X.X.dist-info
+sed -i 's/\([^-]\)dateutil/\1python-dateutil/g' METADATA metadata.json
+请根据需要修改上述路径位置.
+3. 安装或更新 sunpy[all].
