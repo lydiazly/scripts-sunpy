@@ -5,11 +5,11 @@ TROUBLESHOOTING
 
 * 推荐安装到当前用户.
 设置方法:
-1. 配置环境变量 $PYTHONPATH 为当前用户使用的路径(例如在 .bashrc 中设置).
-2. 检查包安装的路径:
+1. 检查包安装的路径:
 python -m site
-其中 USER_SITE 即为当前用户使用包安装路径.
-3. 使用 pip 安装或更新时加上 --user 选项.
+其中 USER_SITE 即为当前用户使用包安装路径, 如显示'doesn't exist',
+使用 mkdir -p ... 创建.
+2. 使用 pip 安装或更新时加上 --user 选项.
 
 * Astropy 3.0 及之后版本不再支持 Python<3.5,
 安装 SunPy 时需指定 Astropy 版本, 例如:
