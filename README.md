@@ -1,7 +1,10 @@
 ## SunPy scripts & examples
-> Tested: SunPy(0.8.5), Astropy(2.0.4), Python 2.7 & Python 3.4, Ubuntu 14.04 LTS
+> Tested:<br />
+> Ubuntu 14.04 LTS<br />
+> Python 2.7 & Python 3.4 - SunPy(0.8.5), Astropy(2.0.4)<br />
+> Python 3.5 - SunPy(0.8.5), Astropy(3.0.1)
 
-* *Update: 2018-03-13*
+* *Update: 2018-03-14*
 
 <br />
 
@@ -38,14 +41,14 @@ Import:
 
 To get help:
 
-In python:
+Python:
 
 ``` python
 >>> import usr_sunpy
 >>> help(usr_sunpy)
 ```
 
-In Shell:
+Shell:
 
 ``` sh
 pydoc usr_sunpy
