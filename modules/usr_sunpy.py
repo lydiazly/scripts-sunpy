@@ -138,9 +138,9 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
         xmax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Tx).to(u.deg).value
         ymin = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Ty).to(u.deg).value
         ymax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Ty).to(u.deg).value
-        rmapu = mapu.data.T[::iskip, ::jskip]
-        rmapv = mapv.data.T[::iskip, ::jskip]
-        rmapc = mapc.data.T[::iskip, ::jskip]
+        rmapu = np.array(mapu.data.T[::iskip, ::jskip])
+        rmapv = np.array(mapv.data.T[::iskip, ::jskip])
+        rmapc = np.array(mapc.data.T[::iskip, ::jskip])
         X, Y = np.mgrid[xmin:xmax:dimx*1j, ymin:ymax:dimy*1j][:, ::iskip, ::jskip]  # deg
     else:
         X, Y = coords
