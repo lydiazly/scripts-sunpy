@@ -63,7 +63,7 @@ mapbz = deepcopy(mapb)
 mapbx.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.cos((mapa.data + 270.) * dtor)
 mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.) * dtor)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
-print('Time to compute: %f' % (time.time() - t0))
+print('(Time of getting Bvec: %f sec)' % (time.time() - t0))
 
 # Rotate(CCW)
 # This function will remove old CROTA keywords from the header.
@@ -75,7 +75,7 @@ with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
     mapby = mapby.rotate(order=order)
     mapbz = mapbz.rotate(order=order)
 print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
-print('Time to rotate: %f' % (time.time() - t0))
+print('(Time of rotation: %f sec)' % (time.time() - t0))
 
 # Check the center ('crpix1', 'crpix2') - First pixel is number 1.
 # mask = np.isfinite(mapbz.data)  # Get the center by finite values
