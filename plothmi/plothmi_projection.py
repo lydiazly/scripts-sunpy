@@ -21,22 +21,26 @@ import astropy.units as u
 import sunpy.map
 
 from copy import deepcopy
-import gc, os
+import gc, os, sys
+gc.disable()
 
-try:
-    import usr_sunpy
-except ImportError as e:
-    print("Import Error:", e)
-    exit(1)
+# [usr_sunpy]
+# Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
+path = os.path.split(os.path.abspath(__file__))[0]
+sys.path.append(path + '/../modules')
 from usr_sunpy import *
 
-path = os.path.split(os.path.abspath(__file__))[0]
+#======================================================================|
+# Global Parameters
+
+# Data
 fname1 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
 fname2 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
 fname3 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
 fname4 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
 
-xmin, xmax = (500.,800.)  # arcsec
+# Range of submap (arcsec)
+xmin, xmax = (500.,800.)
 ymin, ymax = (-450.,-200.)
 
 #======================================================================|
@@ -74,16 +78,17 @@ center = mapbz.pixel_to_world(*pcenter)
 print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       ((mapbz.dimensions.x.value-1.)/2., (mapbz.dimensions.y.value-1.)/2.,
         mapbz.center.Tx.value, mapbz.center.Ty.value,
-        mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
+        mapbz.center.heliographic_stonyhurst.lon.value,
+        mapbz.center.heliographic_stonyhurst.lat.value))
 print('[Disk_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
-      (pcenter[0].value, pcenter[1].value, center.Tx.value, center.Ty.value,
-       center.heliographic_stonyhurst.lon.value, center.heliographic_stonyhurst.lat.value))
+      (pcenter[0].value, pcenter[1].value,
+       center.Tx.value, center.Ty.value,
+       center.heliographic_stonyhurst.lon.value,
+       center.heliographic_stonyhurst.lat.value))
 print('[Observation]\n\t(lon, lat, radius) = (%g deg, %g deg, %g m)' %
-      (mapbz.heliographic_longitude.value, mapbz.heliographic_latitude.value,
+      (mapbz.heliographic_longitude.value,
+       mapbz.heliographic_latitude.value,
        mapbz.observer_coordinate.radius.value))
-
-# Release
-del mapb, mapi, mapa, mapd; gc.collect()
 
 # Submap
 bl = SkyCoord(xmin*u.arcsec, ymin*u.arcsec, frame=mapbz.coordinate_frame)
