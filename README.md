@@ -1,10 +1,13 @@
 ## SunPy scripts & examples
 > Tested:<br />
 > Ubuntu 14.04 LTS<br />
-> Python 2.7 & Python 3.4 - SunPy(0.8.5), Astropy(2.0.4)<br />
-> Python 3.5 - SunPy(0.8.5), Astropy(3.0.1)
+> Python 2.7 - SunPy(0.8.5), Astropy(2.0.4)<br />
+> Python 3.4 - SunPy(0.8.5), Astropy(2.0.4)<br />
+> Python 3.5 - SunPy(0.8.5), Astropy(3.0.1)<br />
+> Python 3.6 - SunPy(0.8.5), Astropy(3.0.1)
 
-* *Update: 2018-03-14*
+
+* *Update: 2018-04-01*
 
 <br />
 
@@ -20,26 +23,22 @@ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 
     pip install sunpy[all]
 
-(See [<u>sunpy_install_troubleshooting</u>](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_install_troubleshooting.txt))
+(See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt))
 
-#### Import user modules
+#### Use modules
 
-Append&nbsp;&nbsp;<span style="color:#000000">*scripts-sunpy/modules*</span>&nbsp;&nbsp;
-into&nbsp;&nbsp;<span style="color:#445eac">*$PYTHONPATH*</span>.
+[modules/usr_sunpy]
 
-&nbsp;&nbsp;*e.g.* For Bash users, in ~/.bashrc:
+Funcions: *read_sdo, plot_map, plot_vmap, image_to_helio, ...*
 
-``` sh
-export PYTHONPATH=$PYTHONPATH:<YOUR_PATH>/scripts-sunpy/modules
-```
-
-Import:
+Append&nbsp;&nbsp;<span style="color:#000000">*./modules*</span>&nbsp;&nbsp;
+to&nbsp;&nbsp;<span style="color:#445eac">$PYTHONPATH</span>&nbsp;&nbsp;and import:
 
 ``` python
 >>> from usr_sunpy import *
 ```
 
-To get help:
+Get help:
 
 Python:
 
@@ -54,6 +53,9 @@ Shell:
 pydoc usr_sunpy
 ```
 
+(See example:
+[plothmi.py](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/plothmi/plothmi.py))
+
 ---
 
 #### Examples
@@ -63,9 +65,5 @@ Scripts:
     python plothmi.py
 
 IPython notebooks:
-
-    ipython notebook example_plothmi.ipynb
-
-&nbsp;&nbsp;&nbsp;&nbsp;or
 
     jupyter notebook example_plothmi.ipynb

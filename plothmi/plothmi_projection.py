@@ -21,14 +21,17 @@ import astropy.units as u
 import sunpy.map
 
 from copy import deepcopy
-import gc, os, sys
+import gc, os
 gc.disable()
 
 # [usr_sunpy]
 # Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
-path = os.path.split(os.path.abspath(__file__))[0]
-sys.path.append(path + '/../modules')
-from usr_sunpy import *
+try:
+    from usr_sunpy import *
+except:
+    import sys
+    sys.path.append(path + '/../modules')
+    from usr_sunpy import *
 
 #======================================================================|
 # Global Parameters
