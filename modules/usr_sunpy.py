@@ -2,10 +2,11 @@
 '''
 User functions.
 [SunPy Version: 0.8.2]
-[Reference] http://docs.sunpy.org/en/v0.8.2/code_ref/map.html
+[See also] http://docs.sunpy.org/en/v0.8.2/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
 # 2018-01-26 modified by Lydia
+
 from __future__ import division, print_function
 __all__ = ['read_sdo', 'plot_map', 'plot_vmap', 'image_to_helio', 'proj_matrix']
 import astropy.units as u
@@ -16,6 +17,7 @@ from scipy import interpolate
 import sunpy.map
 from sunpy.visualization import axis_labels_from_ctype
 import os
+
 #======================================================================|
 def read_sdo(filename):
     '''
@@ -38,7 +40,7 @@ def read_sdo(filename):
     .axis2 which correspond to the first and second axes in the header.
     axis1 corresponds to the coordinate axis for x and axis2 corresponds to y.
     
-    [Reference]
+    [See also]
     help(sunpy.map.GenericMap)
     http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#using-map-objects
     ----------------------------------------------------------------------------
@@ -70,7 +72,7 @@ def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
     
     [Return] A matplotlib image object
     
-    [Reference]
+    [See also]
     http://docs.sunpy.org/en/v0.8.2/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
     ----------------------------------------------------------------------------
     '''
@@ -119,7 +121,7 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
     
     [Return] A matplotlib image object
     
-    [Reference]
+    [See also]
     https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
     ----------------------------------------------------------------------------
     '''
@@ -204,8 +206,7 @@ def image_to_helio(*smap):
     - smap => (x_h, y_h) numpy ndarrays
     - smapx, smapy, smapz => (smapx_h, smapy_h, smapz_h) sunpy GenericMaps
     
-    [Reference]
-    http://link.springer.com/10.1007/BF00158295
+    [See also]
     http://docs.sunpy.org/en/latest/code_ref/coordinates.html#sunpy-coordinates
     ----------------------------------------------------------------------------
     '''
@@ -263,6 +264,9 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     - B0: The latitude of the center of the disk.
     - Lc: The longitude of the the referenced point.
     - Bc: The latitude of the referenced point.
+    
+    [References]
+    http://link.springer.com/10.1007/BF00158295
     ----------------------------------------------------------------------------
     '''
     ax1 =  -np.sin(B0) * np.sin(P) * np.sin(Lc - L0) + np.cos(P) * np.cos(Lc - L0)
@@ -282,4 +286,3 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
               + np.sin(Bc) *  np.cos(B0) * np.cos(P))
         az3 =   np.cos(Bc) *  np.cos(B0) * np.cos(Lc - L0) + np.sin(Bc) * np.sin(B0)
         return ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
-

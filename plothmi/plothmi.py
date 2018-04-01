@@ -6,9 +6,12 @@ Read FITS data & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-01-28 modified by Lydia
+# 2018-04-01 modified by Lydia
 
 from __future__ import division, print_function
+
+import matplotlib
+matplotlib.use('TkAgg')  # Ensure the backend
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -19,7 +22,7 @@ import sunpy.map
 
 from copy import deepcopy
 import gc, os
-# import time
+import time
 
 try:
     import usr_sunpy
@@ -49,6 +52,7 @@ mapd = read_sdo(fname4)
 # Disambiguate
 mapa.data[np.isfinite(mapd.data) * (mapd.data > 3)] += 180.
 
+t0 = time.time()
 dtor = np.pi/180.
 mapbx = deepcopy(mapb)
 mapby = deepcopy(mapb)
@@ -56,18 +60,19 @@ mapbz = deepcopy(mapb)
 mapbx.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.cos((mapa.data + 270.) * dtor)
 mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.) * dtor)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
+print('Time to compute: %f' % (time.time() - t0))
 
 # Rotate(CCW)
 # This function will remove old CROTA keywords from the header.
-order = 1  # Test: 1 or 3 is ok
+order = 3  # Test: 1 or 3 is ok
 print('Correcting image axes...')
-# start = time.time()
+t0 = time.time()
 with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
     mapbx = mapbx.rotate(order=order)
     mapby = mapby.rotate(order=order)
     mapbz = mapbz.rotate(order=order)
 print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
-# print(time.time() - start)
+print('Time to rotate: %f' % (time.time() - t0))
 
 # Check the center ('crpix1', 'crpix2') - First pixel is number 1.
 # mask = np.isfinite(mapbz.data)  # Get the center by finite values
@@ -78,8 +83,8 @@ pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pi
 center = mapbz.pixel_to_world(*pcenter)
 print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       ((mapbz.dimensions.x.value-1.)/2., (mapbz.dimensions.y.value-1.)/2.,
-         mapbz.center.Tx.value, mapbz.center.Ty.value,
-         mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
+        mapbz.center.Tx.value, mapbz.center.Ty.value,
+        mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
 print('[Disk_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       (pcenter[0].value, pcenter[1].value, center.Tx.value, center.Ty.value,
        center.heliographic_stonyhurst.lon.value, center.heliographic_stonyhurst.lat.value))

@@ -6,9 +6,12 @@ Read FITS data & Projection & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-19 written by Lydia
-# 2018-01-24 modified by Lydia
+# 2018-04-01 modified by Lydia
 
 from __future__ import division, print_function
+
+import matplotlib
+matplotlib.use('TkAgg')  # Ensure the backend
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -57,7 +60,7 @@ mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
 
 # Rotate(CCW)
-order = 1  # Test: 1 or 3 is ok
+order = 3  # Test: 1 or 3 is ok
 print('Correcting image axes...')
 with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
     mapbx = mapbx.rotate(order=order)
@@ -70,8 +73,8 @@ pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pi
 center = mapbz.pixel_to_world(*pcenter)
 print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       ((mapbz.dimensions.x.value-1.)/2., (mapbz.dimensions.y.value-1.)/2.,
-         mapbz.center.Tx.value, mapbz.center.Ty.value,
-         mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
+        mapbz.center.Tx.value, mapbz.center.Ty.value,
+        mapbz.center.heliographic_stonyhurst.lon.value, mapbz.center.heliographic_stonyhurst.lat.value))
 print('[Disk_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
       (pcenter[0].value, pcenter[1].value, center.Tx.value, center.Ty.value,
        center.heliographic_stonyhurst.lon.value, center.heliographic_stonyhurst.lat.value))
