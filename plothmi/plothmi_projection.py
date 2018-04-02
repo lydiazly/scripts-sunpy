@@ -56,7 +56,7 @@ mapi = read_sdo(fname2)
 mapa = read_sdo(fname3)
 mapd = read_sdo(fname4)
 # Disambiguate
-mapa.data[np.isfinite(mapd.data) * (mapd.data > 3)] += 180.
+mapa.data[mapd.data > 3] += 180.
 
 dtor = np.pi/180.
 mapbx = deepcopy(mapb)
