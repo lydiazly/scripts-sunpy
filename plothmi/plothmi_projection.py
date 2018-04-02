@@ -11,7 +11,10 @@ Read FITS data & Projection & Plot
 from __future__ import division, print_function
 
 import matplotlib
-matplotlib.use('TkAgg')  # Ensure the backend
+try:
+    matplotlib.use('Qt5Agg')
+except:
+    matplotlib.use('TkAgg')
 
 import matplotlib.pyplot as plt
 import numpy as np
