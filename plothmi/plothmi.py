@@ -10,11 +10,8 @@ Read FITS data & Plot
 
 from __future__ import division, print_function
 
-import matplotlib
-try:
-    matplotlib.use('Qt5Agg')
-except:
-    matplotlib.use('TkAgg')
+# import matplotlib
+# matplotlib.use('Qt5Agg')  # 'Qt5Agg', 'TkAgg', 'Agg', ...
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,12 +27,9 @@ gc.disable()
 # [usr_sunpy]
 # Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
 path = os.path.split(os.path.abspath(__file__))[0]
-try:
-    from usr_sunpy import *
-except:
-    import sys
-    sys.path.append(path + '/../modules')
-    from usr_sunpy import *
+import sys
+sys.path.append(path + '/../modules')
+from usr_sunpy import *
 
 #======================================================================|
 # Global Parameters
