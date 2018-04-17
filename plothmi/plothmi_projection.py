@@ -6,7 +6,7 @@ Read FITS data & Projection & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-19 written by Lydia
-# 2018-04-01 modified by Lydia
+# 2018-04-17 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -21,17 +21,14 @@ import astropy.units as u
 import sunpy.map
 
 from copy import deepcopy
-import gc, os
-gc.disable()
+import os
 
 # [usr_sunpy]
 # Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
-try:
-    from usr_sunpy import *
-except:
-    import sys
-    sys.path.append(path + '/../modules')
-    from usr_sunpy import *
+path = os.path.split(os.path.abspath(__file__))[0]
+import sys
+sys.path.append(path + '/../modules')
+from usr_sunpy import *
 
 #======================================================================|
 # Global Parameters
@@ -67,7 +64,7 @@ mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
 
 # Rotate(CCW)
-order = 3  # Test: 1 or 3 is ok
+order = 1  # Test: 1 or 3 is ok
 print('Correcting image axes...')
 with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
     mapbx = mapbx.rotate(order=order)
@@ -100,7 +97,7 @@ smapbx = mapbx.submap(bl, tr)
 smapby = mapby.submap(bl, tr)
 smapbz = mapbz.submap(bl, tr)
 print('\nSubmap: %s = %s arcsec' %
-      (list(map(int, u.Quantity(smapbz.dimensions).value)), [[xmin, xmax], [ymin, ymax]]))
+      (tuple(map(int, u.Quantity(smapbz.dimensions).value)), ((xmin, xmax), (ymin, ymax))))
 
 #======================================================================|
 # Projection

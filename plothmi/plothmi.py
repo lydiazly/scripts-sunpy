@@ -6,7 +6,7 @@ Read FITS data & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-04-01 modified by Lydia
+# 2018-04-17 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -21,8 +21,7 @@ import astropy.units as u
 import sunpy.map
 
 from copy import deepcopy
-import gc, os, time
-gc.disable()
+import os, time
 
 # [usr_sunpy]
 # Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
@@ -69,7 +68,7 @@ print('(Time of getting Bvec: %f sec)' % (time.time() - t0))
 
 # Rotate(CCW)
 # This function will remove old CROTA keywords from the header.
-order = 3  # Test: 1 or 3 is ok
+order = 1  # Test: 1 or 3 is ok
 print('Correcting image axes...')
 t0 = time.time()
 with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
@@ -108,7 +107,7 @@ smapbx = mapbx.submap(bl, tr)
 smapby = mapby.submap(bl, tr)
 smapbz = mapbz.submap(bl, tr)
 print('\nSubmap: %s = %s arcsec' %
-      (list(map(int, u.Quantity(smapbz.dimensions).value)), [[xmin, xmax], [ymin, ymax]]))
+      (tuple(map(int, u.Quantity(smapbz.dimensions).value)), ((xmin, xmax), (ymin, ymax))))
 
 #======================================================================|
 # Plot
