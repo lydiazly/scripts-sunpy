@@ -21,8 +21,6 @@ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 
 #### Install [<u>SunPy</u>](http://sunpy.org)
 
-    pip install sunpy[all]
-
 (See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt))
 
 #### Use modules

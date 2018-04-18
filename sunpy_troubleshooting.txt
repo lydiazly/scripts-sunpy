@@ -1,16 +1,22 @@
 TROUBLESHOOTING
 ----------------
 
- === 安装sunpy ===
+ === conda安装 ===
+ conda config --add channels conda-forge
+ conda install sunpy
 
-* 无论是否是conda环境安装, 都推荐用pip.
+  === pip安装 ===
+ pip install sunpy[all]  # With all dependencies
+ pip install pytest  # To run the tests
+
+* conda安装的channel: conda-forge
 
 * 使用pip安装时最好安装到当前用户.
 设置方法:
 1. 检查包安装的路径:
 python -m site
 其中 USER_SITE 即为当前用户使用包安装路径, 如显示'doesn't exist',
-使用 mkdir -p ... 创建.
+则使用 mkdir -p ... 创建.
 2. 使用 pip 安装或更新时加上 --user 选项(conda环境下的pip安装不需要--user).
 
 * Astropy3.0+ 不再支持 Python<3.5,
@@ -20,12 +26,11 @@ pip install sunpy[all] "astropy<3.0"
 * 出现'Could not find a version that satisfies the requirement dateutil':
 1. 先安装或更新 sunpy(无参数), 生成 sunpy-X.X.X.dist-info 目录;
 2. 将相应文件的 dateutil 替换为 python-dateutil:
-假设python版本3.4, sunpy安装在当前用户路径(使用 pip show sunpy 查看路径),
+假设sunpy安装在当前用户路径(conda环境换成相应路径),
 cd ~/.local/lib/pythonX.X/site-packages/sunpy-X.X.X.dist-info
 替换'dateutil'为'python-dateutil':
 sed -ri 's/(python-)?dateutil/python-dateutil/g' ./*
 3. 再安装或更新 sunpy[all].
-
 
  === 其他 ===
 
