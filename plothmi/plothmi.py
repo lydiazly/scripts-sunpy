@@ -6,7 +6,7 @@ Read FITS data & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-04-17 modified by Lydia
+# 2018-04-25 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -23,21 +23,19 @@ import sunpy.map
 from copy import deepcopy
 import os, time
 
-# [usr_sunpy]
-# Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
-path = os.path.split(os.path.abspath(__file__))[0]
+# [usr_sunpy] Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
 import sys
-sys.path.append(path + '/../modules')
+sys.path.append('../modules')
 from usr_sunpy import *
 
 #======================================================================|
 # Global Parameters
 
 # Data
-fname1 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
-fname2 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
-fname3 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
-fname4 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
+fname1 = 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
+fname2 = 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
+fname3 = 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
+fname4 = 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
 
 # Range of submap (arcsec)
 xmin, xmax = (300., 800.)
@@ -46,7 +44,7 @@ ymin, ymax = (-500., -100.)
 #======================================================================|
 # Read data
 
-print('[Path] %s' % path)
+print('[Path] %s' % os.getcwd())
 print('Reading data...')
 mapb = read_sdo(fname1)
 mapi = read_sdo(fname2)
@@ -67,11 +65,14 @@ mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
 print('(Time of getting Bvec: %f sec)' % (time.time() - t0))
 
 # Rotate(CCW)
-# This function will remove old CROTA keywords from the header.
+# `rotate` function will remove old CROTA keywords.
 order = 1  # Test: 1 or 3 is ok
+# Suppress metadata warnings if sunpy >= 0.9.0:
+mapbx.meta['hgln_obs'] = 0.; mapby.meta['hgln_obs'] = 0.; mapbz.meta['hgln_obs'] = 0.
 print('Correcting image axes...')
 t0 = time.time()
-with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
+# Suppress warnings of NaNs:
+with np.errstate(invalid='ignore'):
     mapbx = mapbx.rotate(order=order)
     mapby = mapby.rotate(order=order)
     mapbz = mapbz.rotate(order=order)
@@ -79,10 +80,6 @@ print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
 print('(Time of rotation: %f sec)' % (time.time() - t0))
 
 # Check the center ('crpix1', 'crpix2') - First pixel is number 1.
-# mask = np.isfinite(mapbz.data)  # Get the center by finite values
-# jmin, jmax = (mask.nonzero()[0].min(), mask.nonzero()[0].max())
-# imin, imax = (mask.nonzero()[1].min(), mask.nonzero()[1].max())
-# pcenter = (0.5 * (imin + imax) * u.pix, 0.5 * (jmin + jmax) * u.pix)
 pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pix)
 center = mapbz.pixel_to_world(*pcenter)
 print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
@@ -123,7 +120,7 @@ mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec,
                      axes=ax1, color='yellow', linewidth=1.5)
 # ax1.set_title(mapbz.latex_name, y=1.05)
 plt.clim(-2000., 2000.)
-fig1.savefig(path+'/'+'plothmi_disk.png', dpi=200)
+fig1.savefig('plothmi_disk.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (12, 12)
@@ -140,6 +137,6 @@ ax2.set_title(mapbz.latex_name+' (submap)', y=1.1)
 plt.subplots_adjust(right=0.8)  # Reduce the value to move the colorbar to the right
 im2.set_clim(-2000., 2000.)
 
-fig2.savefig(path+'/'+'plothmi_sub.png', dpi=200)
+fig2.savefig('plothmi_sub.png', dpi=200)
 #----------------------------------------------------------------------|
 plt.show()

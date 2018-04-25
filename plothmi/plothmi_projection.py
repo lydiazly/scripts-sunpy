@@ -6,7 +6,7 @@ Read FITS data & Projection & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-19 written by Lydia
-# 2018-04-17 modified by Lydia
+# 2018-04-25 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -21,23 +21,21 @@ import astropy.units as u
 import sunpy.map
 
 from copy import deepcopy
-import os
+import os, time
 
-# [usr_sunpy]
-# Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
-path = os.path.split(os.path.abspath(__file__))[0]
+# [usr_sunpy] Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
 import sys
-sys.path.append(path + '/../modules')
+sys.path.append('../modules')
 from usr_sunpy import *
 
 #======================================================================|
 # Global Parameters
 
 # Data
-fname1 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
-fname2 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
-fname3 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
-fname4 = path + '/' + 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
+fname1 = 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
+fname2 = 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
+fname3 = 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
+fname4 = 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
 
 # Range of submap (arcsec)
 xmin, xmax = (500.,800.)
@@ -46,15 +44,17 @@ ymin, ymax = (-450.,-200.)
 #======================================================================|
 # Read data
 
-print('[Path] %s' % path)
+print('[Path] %s' % os.getcwd())
 print('Reading data...')
 mapb = read_sdo(fname1)
 mapi = read_sdo(fname2)
 mapa = read_sdo(fname3)
 mapd = read_sdo(fname4)
 # Disambiguate
+# mapa.data[np.isfinite(mapd.data) & (mapd.data > 3)] += 180.
 mapa.data[mapd.data > 3] += 180.
 
+t0 = time.time()
 dtor = np.pi/180.
 mapbx = deepcopy(mapb)
 mapby = deepcopy(mapb)
@@ -62,15 +62,22 @@ mapbz = deepcopy(mapb)
 mapbx.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.cos((mapa.data + 270.) * dtor)
 mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.) * dtor)
 mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
+print('(Time of getting Bvec: %f sec)' % (time.time() - t0))
 
 # Rotate(CCW)
+# `rotate` function will remove old CROTA keywords.
 order = 1  # Test: 1 or 3 is ok
+# Suppress metadata warnings if sunpy >= 0.9.0:
+mapbx.meta['hgln_obs'] = 0.; mapby.meta['hgln_obs'] = 0.; mapbz.meta['hgln_obs'] = 0.
 print('Correcting image axes...')
-with np.errstate(invalid='ignore'):  # Suppress warnings of NaNs
+t0 = time.time()
+# Suppress warnings of NaNs:
+with np.errstate(invalid='ignore'):
     mapbx = mapbx.rotate(order=order)
     mapby = mapby.rotate(order=order)
     mapbz = mapbz.rotate(order=order)
 print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
+print('(Time of rotation: %f sec)' % (time.time() - t0))
 
 # Check the center ('crpix1', 'crpix2') - First pixel is number 1.
 pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pix)
@@ -102,8 +109,10 @@ print('\nSubmap: %s = %s arcsec' %
 #======================================================================|
 # Projection
 
+t0 = time.time()
 hx, hy = image_to_helio(smapbz)
 smapbx_h, smapby_h, smapbz_h = image_to_helio(smapbx, smapby, smapbz)
+print('(Time of projection: %f sec)' % (time.time() - t0))
 print('\nProjected:')
 print('(xmin, xmax) = (%9.3f, %9.3f) arcsec\n(ymin, ymax) = (%9.3f, %9.3f) arcsec' %
       (hx.min(), hx.max(), hy.min(), hy.min()))
@@ -117,11 +126,12 @@ plot_map(ax1, mapbz)
 
 # Properties
 mapbz.draw_grid(axes=ax1, grid_spacing=20*u.deg, color='w', linestyle=':')
+# mapbz.draw_limb(axes=ax1, color='b', linewidth=1.5)
 mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec,
                      axes=ax1, color='yellow', linewidth=1.5)
 # ax1.set_title(mapbz.latex_name, y=1.05)
 plt.clim(-2000., 2000.)
-fig1.savefig(path+'/'+'projection_disk.png', dpi=200)
+fig1.savefig('projection_disk.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (12, 12)
@@ -138,15 +148,15 @@ ax2.set_title(mapbz.latex_name+' (submap)', y=1.1)
 plt.subplots_adjust(right=0.8)  # Reduce the value to move the colorbar to the right
 im2.set_clim(-2000., 2000.)
 
-fig2.savefig(path+'/'+'projection_sub.png', dpi=200)
+fig2.savefig('projection_sub.png', dpi=200)
 
 #----------------------------------------------------------------------|
 iskip, jskip = (10, 10)
 
 fig3 = plt.figure(figsize=(9, 5), dpi=100)
 ax3 = fig3.add_subplot(111)
-im3 = plot_map(ax3, smapbz_h, hx, hy)
-plot_vmap(ax3, smapbx_h, smapby_h, smapbz_h, hx, hy,
+im3 = plot_map(ax3, smapbz_h, coords=(hx, hy))
+plot_vmap(ax3, smapbx_h, smapby_h, smapbz_h, coords=(hx, hy),
           iskip=iskip, jskip=jskip, cmin=100., vmax=300., cmap='binary',
           scale_units='xy', scale=1/0.03, minlength=0.05)
 
@@ -158,6 +168,6 @@ ax3.set_xlim((-170,170))
 ax3.set_ylim((-110,100))
 im3.set_clim((-2000,2000))
 
-fig3.savefig(path+'/'+'projection_sub_projected.png', dpi=200)
+fig3.savefig('projection_sub_projected.png', dpi=200)
 #----------------------------------------------------------------------|
 plt.show()

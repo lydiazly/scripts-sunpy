@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 '''
 User functions.
-[SunPy Version: 0.8.2]
-[See also] http://docs.sunpy.org/en/v0.8.2/code_ref/map.html
+[SunPy Version: 0.9.0]
+[See also] http://docs.sunpy.org/en/stable/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
-# 2018-01-26 modified by Lydia
+# 2018-04-25 modified by Lydia
 
 from __future__ import division, print_function
 __all__ = ['read_sdo', 'plot_map', 'plot_vmap', 'image_to_helio', 'proj_matrix']
@@ -51,7 +50,7 @@ def read_sdo(filename):
     return smap
 
 #======================================================================|
-def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
+def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
     '''
     ----------------------------------------------------------------------------
     Plot image.
@@ -63,7 +62,9 @@ def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
     [Parameters]
     - ax: A matplotlib axes object
     - smap: A sunpy `GenericMap`
-    - *coords: Two 2D numpy `ndarrays`
+    - coords: Two 2D numpy `ndarrays`
+    - grid: draw grids or not
+    - cmap: name of color map
     - **kwargs:
       sunpy_kwargs: annotate, axes, title
       matplotlib_kwargs:
@@ -98,7 +99,7 @@ def plot_map(ax, smap, *coords, grid=False, cmap='gray', **kwargs):
     return im
 
 #======================================================================|
-def plot_vmap(ax, mapu, mapv, mapc, *coords,
+def plot_vmap(ax, mapu, mapv, mapc, coords=None,
               iskip=10, jskip=10, cmin=0., vmax=1000., cmap='binary',
               scale_units='xy', scale=1/0.05, minlength=0.05, width=0.003,
               headlength=6, headwidth=5, headaxislength=3,
@@ -114,10 +115,12 @@ def plot_vmap(ax, mapu, mapv, mapc, *coords,
     - mapu: a sunpy `GenericMap` of Vector_x
     - mapv: a sunpy `GenericMap` of Vector_y
     - mapc: a sunpy `GenericMap` to set color values
-    - *coords: two 2D numpy ndarrays - X, Y
+    - coords: two 2D numpy ndarrays - X, Y
+    - iskip, jskip: number of skipped values in both dimensions
     - cmin: mapc.data < cmin => set to zero
     - vmax: norm(Vector) > vmax => set to vmax
-    - **kwargs: kwargs of `quiver`
+    - cmap: name of color map
+    - scale_units, ..., **kwargs: kwargs of `quiver`
     
     [Return] A matplotlib image object
     
