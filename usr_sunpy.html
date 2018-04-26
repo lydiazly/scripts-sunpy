@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module usr_sunpy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>usr_sunpy</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/lydia/codes/zly/scripts-sunpy/modules/usr_sunpy.py">/home/lydia/codes/zly/scripts-sunpy/modules/usr_sunpy.py</a></font></td></tr></table>
+    <p><tt>User&nbsp;functions.<br>
+[SunPy&nbsp;Version:&nbsp;0.9.0]<br>
+[See&nbsp;also]&nbsp;<a href="http://docs.sunpy.org/en/stable/code_ref/map.html">http://docs.sunpy.org/en/stable/code_ref/map.html</a></tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+<a href="sunpy.html">sunpy</a><br>
+</td><td width="25%" valign=top><a href="astropy.units.html">astropy.units</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-image_to_helio"><strong>image_to_helio</strong></a>(*smap)</dt><dd><tt>----------------------------------------------------------------------------<br>
+Transform&nbsp;maps&nbsp;from&nbsp;image-coordinate&nbsp;to&nbsp;helio-coordinate.<br>
+Helo-coordinate:&nbsp;Helioprojective(Cartesian)&nbsp;system<br>
+Matrix:&nbsp;A22&nbsp;or&nbsp;A33&nbsp;get&nbsp;from&nbsp;`usr_sunpy.proj_matrix`<br>
+Unit:&nbsp;arcsec<br>
+&nbsp;<br>
+[Parameters]&nbsp;*smap:&nbsp;1&nbsp;or&nbsp;3&nbsp;args,&nbsp;sunpy&nbsp;`GenericMap`s<br>
+&nbsp;<br>
+[Return]<br>
+For&nbsp;scalar&nbsp;-&nbsp;<a href="#-image_to_helio">image_to_helio</a>(smap):<br>
+-&gt;&nbsp;numpy&nbsp;`ndarray`s:&nbsp;x_h,&nbsp;y_h<br>
+For&nbsp;vectors&nbsp;-&nbsp;<a href="#-image_to_helio">image_to_helio</a>(smapx,&nbsp;smapy,&nbsp;smapz):<br>
+-&gt;&nbsp;sunpy&nbsp;`GenericMap`s:&nbsp;smapx_h,&nbsp;smapy_h,&nbsp;smapz_h<br>
+&nbsp;<br>
+[See&nbsp;also]<br>
+<a href="http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates">http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates</a><br>
+----------------------------------------------------------------------------</tt></dd></dl>
+ <dl><dt><a name="-plot_map"><strong>plot_map</strong></a>(ax, smap, coords=None, grid=False, cmap='gray', **kwargs)</dt><dd><tt>----------------------------------------------------------------------------<br>
+Plot&nbsp;image.<br>
+&nbsp;<br>
+[Plot&nbsp;Function]<br>
+&nbsp;&nbsp;<a href="#-plot_map">plot_map</a>(ax,&nbsp;smap,&nbsp;**kwargs)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;`pcolormesh`&nbsp;from&nbsp;matplotlib<br>
+&nbsp;&nbsp;<a href="#-plot_map">plot_map</a>(ax,&nbsp;smap,&nbsp;X,&nbsp;Y,&nbsp;**kwargs)&nbsp;-&gt;&nbsp;`imshow`&nbsp;from&nbsp;matplotlib<br>
+&nbsp;<br>
+[Parameters]<br>
+-&nbsp;ax:&nbsp;a&nbsp;matplotlib&nbsp;axes&nbsp;object<br>
+-&nbsp;smap:&nbsp;a&nbsp;sunpy&nbsp;`GenericMap`<br>
+-&nbsp;coords:&nbsp;two&nbsp;2D&nbsp;numpy&nbsp;`ndarray`s:&nbsp;(X,&nbsp;Y)<br>
+-&nbsp;grid:&nbsp;draw&nbsp;grids&nbsp;or&nbsp;not<br>
+-&nbsp;cmap:&nbsp;name&nbsp;of&nbsp;color&nbsp;map<br>
+-&nbsp;**kwargs:<br>
+&nbsp;&nbsp;-&nbsp;sunpy_kwargs:&nbsp;annotate,&nbsp;axes,&nbsp;title<br>
+&nbsp;&nbsp;-&nbsp;matplotlib_kwargs:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;coords&nbsp;is&nbsp;None(default):&nbsp;use&nbsp;kwargs&nbsp;of&nbsp;`imshow`,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;else:&nbsp;use&nbsp;kwargs&nbsp;of&nbsp;`pcolormesh`.<br>
+&nbsp;<br>
+[Return]&nbsp;a&nbsp;matplotlib&nbsp;image&nbsp;object<br>
+&nbsp;<br>
+[See&nbsp;also]<br>
+<a href="http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot">http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot</a><br>
+----------------------------------------------------------------------------</tt></dd></dl>
+ <dl><dt><a name="-plot_vmap"><strong>plot_vmap</strong></a>(ax, mapu, mapv, mapc, coords=None, iskip=10, jskip=10, cmin=0.0, vmax=1000.0, cmap='binary', scale_units='xy', scale=20.0, minlength=0.05, width=0.003, headlength=6, headwidth=5, headaxislength=3, **kwargs)</dt><dd><tt>----------------------------------------------------------------------------<br>
+Vector&nbsp;plot.<br>
+&nbsp;<br>
+[Plot&nbsp;Function]&nbsp;`quiver`&nbsp;from&nbsp;matplotlib<br>
+&nbsp;<br>
+[Parameters]<br>
+-&nbsp;ax:&nbsp;matplotlib&nbsp;axes&nbsp;object<br>
+-&nbsp;mapu:&nbsp;a&nbsp;sunpy&nbsp;`GenericMap`&nbsp;of&nbsp;Vector_x<br>
+-&nbsp;mapv:&nbsp;a&nbsp;sunpy&nbsp;`GenericMap`&nbsp;of&nbsp;Vector_y<br>
+-&nbsp;mapc:&nbsp;a&nbsp;sunpy&nbsp;`GenericMap`&nbsp;to&nbsp;set&nbsp;color&nbsp;values<br>
+-&nbsp;coords:&nbsp;two&nbsp;2D&nbsp;numpy&nbsp;`ndarray`s:&nbsp;(X,&nbsp;Y)<br>
+-&nbsp;iskip,&nbsp;jskip:&nbsp;number&nbsp;of&nbsp;skipped&nbsp;points&nbsp;in&nbsp;both&nbsp;dimensions<br>
+-&nbsp;cmin:&nbsp;mapc.data&nbsp;&lt;&nbsp;cmin&nbsp;=&gt;&nbsp;set&nbsp;to&nbsp;zero<br>
+-&nbsp;vmax:&nbsp;norm(Vector)&nbsp;&gt;&nbsp;vmax&nbsp;=&gt;&nbsp;set&nbsp;to&nbsp;vmax<br>
+-&nbsp;cmap:&nbsp;name&nbsp;of&nbsp;color&nbsp;map<br>
+-&nbsp;scale_units,&nbsp;...,&nbsp;**kwargs:&nbsp;kwargs&nbsp;of&nbsp;`quiver`<br>
+&nbsp;<br>
+[Return]&nbsp;a&nbsp;matplotlib&nbsp;image&nbsp;object<br>
+&nbsp;<br>
+[See&nbsp;also]<br>
+https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver<br>
+----------------------------------------------------------------------------</tt></dd></dl>
+ <dl><dt><a name="-proj_matrix"><strong>proj_matrix</strong></a>(P, L0, B0, Bc, Lc, *dim)</dt><dd><tt>----------------------------------------------------------------------------<br>
+For&nbsp;coords:&nbsp;(x,&nbsp;y)_helio&nbsp;=&nbsp;A22.T.I&nbsp;dot&nbsp;(x,&nbsp;y)_image<br>
+For&nbsp;vectors:&nbsp;(U,&nbsp;V,&nbsp;W)_helio&nbsp;=&nbsp;A33&nbsp;dot&nbsp;(U,&nbsp;V,&nbsp;W)_image<br>
+&nbsp;<br>
+[Return]&nbsp;2D&nbsp;numpy&nbsp;`ndarray`s<br>
+&nbsp;&nbsp;default:&nbsp;ax1,&nbsp;ax2,&nbsp;ax3,&nbsp;ay1,&nbsp;ay2,&nbsp;ay3,&nbsp;az1,&nbsp;az2,&nbsp;az3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dim=2:&nbsp;ax1,&nbsp;ax2,&nbsp;ay1,&nbsp;ay2<br>
+&nbsp;<br>
+[Parameters]<br>
+-&nbsp;&nbsp;P:&nbsp;the&nbsp;angle&nbsp;of&nbsp;the&nbsp;northern&nbsp;extremity,&nbsp;CCW&nbsp;from&nbsp;the&nbsp;north&nbsp;point&nbsp;of&nbsp;the&nbsp;disk.<br>
+-&nbsp;L0:&nbsp;the&nbsp;longitude&nbsp;of&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;disk.<br>
+-&nbsp;B0:&nbsp;the&nbsp;latitude&nbsp;of&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;disk.<br>
+-&nbsp;Lc:&nbsp;the&nbsp;longitude&nbsp;of&nbsp;the&nbsp;the&nbsp;referenced&nbsp;point.<br>
+-&nbsp;Bc:&nbsp;the&nbsp;latitude&nbsp;of&nbsp;the&nbsp;referenced&nbsp;point.<br>
+&nbsp;<br>
+[References]<br>
+<a href="http://link.springer.com/10.1007/BF00158295">http://link.springer.com/10.1007/BF00158295</a><br>
+----------------------------------------------------------------------------</tt></dd></dl>
+ <dl><dt><a name="-read_sdo"><strong>read_sdo</strong></a>(filename)</dt><dd><tt>----------------------------------------------------------------------------<br>
+Example&nbsp;of&nbsp;reading&nbsp;from&nbsp;a&nbsp;FITS&nbsp;file.&nbsp;Print&nbsp;the&nbsp;filename&nbsp;and&nbsp;dimensions.<br>
+&nbsp;<br>
+[Properties]<br>
+&nbsp;&nbsp;data&nbsp;-&nbsp;a&nbsp;2D&nbsp;numpy&nbsp;`ndarray`&nbsp;containingthe&nbsp;map&nbsp;data.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i,&nbsp;j]:&nbsp;j&nbsp;from&nbsp;the&nbsp;bottom,&nbsp;i&nbsp;from&nbsp;te&nbsp;left.<br>
+&nbsp;&nbsp;meta&nbsp;-&nbsp;a&nbsp;`dict`&nbsp;of&nbsp;the&nbsp;original&nbsp;image&nbsp;headr&nbsp;tags.<br>
+&nbsp;<br>
+[Return]&nbsp;a&nbsp;sunpy&nbsp;`GenericMap`&nbsp;object<br>
+&nbsp;<br>
+[Notes]<br>
+(From&nbsp;<a href="http://docs.sunpy.org">http://docs.sunpy.org</a>)<br>
+A&nbsp;number&nbsp;of&nbsp;the&nbsp;properties&nbsp;of&nbsp;this&nbsp;class&nbsp;are&nbsp;returned&nbsp;as&nbsp;two-value&nbsp;named<br>
+tuples&nbsp;that&nbsp;can&nbsp;either&nbsp;be&nbsp;indexed&nbsp;by&nbsp;position&nbsp;([0]&nbsp;or&nbsp;[1])&nbsp;or&nbsp;be&nbsp;accessed<br>
+by&nbsp;the&nbsp;names&nbsp;(.x&nbsp;and&nbsp;.y)&nbsp;or&nbsp;(.axis1&nbsp;and&nbsp;.axis2).&nbsp;Things&nbsp;that&nbsp;refer&nbsp;to<br>
+pixel&nbsp;axes&nbsp;use&nbsp;the&nbsp;.x,&nbsp;.y&nbsp;convention,&nbsp;where&nbsp;x&nbsp;and&nbsp;y&nbsp;refer&nbsp;to&nbsp;the&nbsp;FITS<br>
+axes&nbsp;(x&nbsp;for&nbsp;columns&nbsp;y&nbsp;for&nbsp;rows).&nbsp;Spatial&nbsp;axes&nbsp;use&nbsp;.axis1&nbsp;and&nbsp;.axis2&nbsp;which<br>
+correspond&nbsp;to&nbsp;the&nbsp;first&nbsp;and&nbsp;second&nbsp;axes&nbsp;in&nbsp;the&nbsp;header.&nbsp;axis1&nbsp;corresponds<br>
+to&nbsp;the&nbsp;coordinate&nbsp;axis&nbsp;for&nbsp;x&nbsp;and&nbsp;axis2&nbsp;corresponds&nbsp;to&nbsp;y.<br>
+&nbsp;<br>
+[See&nbsp;also]<br>
+help(sunpy.map.GenericMap)<br>
+<a href="http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects">http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects</a><br>
+----------------------------------------------------------------------------</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>division</strong> = _Feature((2, 2, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 8192)<br>
+<strong>print_function</strong> = _Feature((2, 6, 0, 'alpha', 2), (3, 0, 0, 'alpha', 0), 65536)</td></tr></table>
+</body></html>
