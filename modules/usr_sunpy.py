@@ -4,16 +4,11 @@ User functions.
 [See also] http://docs.sunpy.org/en/stable/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
-# 2018-04-26 modified by Lydia
+# 2018-05-18 modified by Lydia
 from __future__ import division, print_function
 import astropy.units as u
-from copy import deepcopy
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy.interpolate import RectBivariateSpline
 import sunpy.map
-from sunpy.visualization import axis_labels_from_ctype
-import os
 #======================================================================|
 def read_sdo(filename):
     '''
@@ -42,7 +37,8 @@ def read_sdo(filename):
     http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects
     ----------------------------------------------------------------------------
     '''
-    smap = sunpy.map.Map(filename)
+    import os
+    smap = sunpy.map.Map(filename)  # Read & return a `GenericMap`
     print('%s\t%s' % (os.path.basename(filename),
           list(map(int, u.Quantity(smap.dimensions).value))))
     return smap
@@ -79,7 +75,9 @@ def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
         raise TypeError("smap should be a sunpy GenericMap.")
     if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
         raise ValueError("coords should be a list of two 2D ndarrays.")
+    
     # Plot
+    import matplotlib.pyplot as plt
     if not coords:
         im = smap.plot(annotate=True, cmap=cmap, **kwargs)
     else:
@@ -115,8 +113,8 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
     - mapc: a sunpy `GenericMap` to set color values
     - coords: two 2D numpy `ndarray`s: (X, Y)
     - iskip, jskip: number of skipped points in both dimensions
-    - cmin: mapc.data < cmin => set to zero
-    - vmax: norm(Vector) > vmax => set to vmax
+    - cmin: where mapc.data < cmin => set to zero
+    - vmax: where norm(Vector) > vmax => set to vmax
     - cmap: name of color map
     - scale_units, ..., **kwargs: kwargs of `quiver`
     
@@ -141,11 +139,12 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
         xmax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Tx).to(u.deg).value
         ymin = (mapc.pixel_to_world(pixmin[0]*u.pix,pixmin[1]*u.pix).Ty).to(u.deg).value
         ymax = (mapc.pixel_to_world(pixmax[0]*u.pix,pixmax[1]*u.pix).Ty).to(u.deg).value
-        rmapu = np.array(mapu.data.T[::iskip, ::jskip])
-        rmapv = np.array(mapv.data.T[::iskip, ::jskip])
-        rmapc = np.array(mapc.data.T[::iskip, ::jskip])
+        rmapu = mapu.data.T[::iskip, ::jskip].copy()
+        rmapv = mapv.data.T[::iskip, ::jskip].copy()
+        rmapc = mapc.data.T[::iskip, ::jskip].copy()
         X, Y = np.mgrid[xmin:xmax:dimx*1j, ymin:ymax:dimy*1j][:, ::iskip, ::jskip]  # deg
     else:
+        from scipy.interpolate import RectBivariateSpline
         X, Y = coords
         P, L0, B0, Bc, Lc, xmin, xmax, ymin, ymax, dimx, dimy, *_ = _get_image_params(mapc)
         ax1, ax2, ay1, ay2 = proj_matrix(P, L0, B0, Bc, Lc, 2)
@@ -154,14 +153,14 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
         hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
         ix = ax1 * hx + ay1 * hy
         iy = ax2 * hx + ay2 * hy
-        # Interpolate to functions
+        # Interpolate to 2D spline functions
         fu = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapu.data.T)
         fv = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapv.data.T)
         fc = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapc.data.T)
         # Resample
-        rmapu = np.array(list(map(fu, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
-        rmapv = np.array(list(map(fv, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
-        rmapc = np.array(list(map(fc, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip]
+        rmapu = np.array(list(map(fu, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip].copy()
+        rmapv = np.array(list(map(fv, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip].copy()
+        rmapc = np.array(list(map(fc, ix.flatten(), iy.flatten()))).reshape((dimx, dimy))[::iskip, ::jskip].copy()
         X = hx[::iskip, ::jskip]; Y = hy[::iskip, ::jskip]
     # Clip
     mag = np.sqrt(rmapu**2 + rmapv**2)
@@ -207,6 +206,8 @@ def image_to_helio(*smap):
     '''
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
         raise TypeError("*smap should be 1 or 3 sunpy GenericMaps.")
+    
+    from copy import deepcopy
     
     P, L0, B0, Bc, Lc, xmin, _, ymin, _, dimx, dimy, dx, dy = _get_image_params(smap[-1])
     
