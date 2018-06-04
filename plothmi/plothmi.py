@@ -26,7 +26,7 @@ import os, time
 # [usr_sunpy] Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
 import sys
 sys.path.append('../modules')
-from usr_sunpy import *
+from usr_sunpy import read_sdo, plot_map, plot_vmap, image_to_helio
 
 #======================================================================|
 # Global Parameters
