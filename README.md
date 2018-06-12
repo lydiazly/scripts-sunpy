@@ -1,48 +1,31 @@
-## SunPy scripts & examples
-> Tested:<br />
-> Ubuntu 16.04 LTS<br />
-> Python 2.7.12: SunPy 0.9.0, Astropy 2.0.6<br />
-> Python 3.5.2: SunPy 0.9.0, Astropy 3.0.2<br />
-> Python 3.6.5: SunPy 0.9.0, Astropy 3.0.2
+# SunPy scripts & examples
 
-* *Update: 2018-04-01*
-
-<br />
-
-###### Download
-
-``` sh
-git clone https://git.coding.net/lydiazly/scripts-sunpy.git
-```
+> Tested ( *Update: 2018-06-01* )<br>
+> Ubuntu 16.04 LTS<br>
+> Python [2.7.12] Sunpy [0.9.0] Astropy [2.0.6]<br>
+> Python [3.6.5] Sunpy [0.9.0] Astropy [3.0.2]<br>
 
 ---
 
-#### Install [<u>SunPy</u>](http://sunpy.org)
+## Download
 
-(See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt))
+    git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 
-#### Use user modules
+## Install [SunPy](http://sunpy.org)
 
-e.g. *modules/usr_sunpy*
+( See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt) )
 
-Funcions: *read_sdo, plot_map, plot_vmap, image_to_helio, ...*
+## Examples
 
-Append&nbsp;&nbsp;<span style="color:#000000">*./modules*</span>&nbsp;&nbsp;
-to&nbsp;&nbsp;<span style="color:#445eac">$PYTHONPATH</span>&nbsp;&nbsp;and import:
+Scripts:
 
-``` python
->>> from usr_sunpy import *
-```
+    python plothmi.py
 
-Or:
+IPython notebooks:
 
-``` python
->>> import sys
->>> sys.path.append('../modules')  # If current directory is plothmi/
->>> from usr_sunpy import *
-```
+    jupyter notebook example_plothmi.ipynb
 
-Get help:
+## Get help
 
 Python:
 
@@ -57,17 +40,22 @@ Shell:
 pydoc usr_sunpy
 ```
 
-(See example:
-[plothmi.py](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/plothmi/plothmi.py))
+## Use user modules
 
----
+e.g. *modules/usr_sunpy*
 
-#### Examples
+[Funcions] *read_sdo, plot_map, plot_vmap, image_to_helio, ...*
 
-Scripts:
+Append *./modules* to *$PYTHONPATH* and import:
 
-    python plothmi.py
+``` python
+>>> from usr_sunpy import *
+```
 
-IPython notebooks:
+Or
 
-    jupyter notebook example_plothmi.ipynb
+``` python
+>>> import sys
+>>> sys.path.append('../modules')  # If current directory is plothmi/
+>>> from usr_sunpy import *
+```

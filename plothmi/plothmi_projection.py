@@ -162,7 +162,7 @@ plot_vmap(ax3, smapbx_h, smapby_h, smapbz_h, coords=(hx, hy),
 
 # Properties
 ax3.grid(True, ls=':', alpha=0.8)
-ax3.set_title(mapbz.latex_name+' (projected)', y=1.02);
+ax3.set_title(mapbz.latex_name+' (projected)', y=1.02)
 plt.subplots_adjust(right=0.9)  # Reduce the value to shift the colorbar right
 ax3.set_xlim((-170,170))
 ax3.set_ylim((-110,100))

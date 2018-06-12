@@ -5,10 +5,8 @@ TROUBLESHOOTING [SunPy 0.9.0]
  conda config --add channels conda-forge
  conda install sunpy
 
-  === pip安装 ===
+ === pip安装 ===
  pip install sunpy[all]  # With all dependencies
-
-* conda安装的channel: conda-forge
 
 * 使用pip安装时最好安装到当前用户.
 设置方法:
