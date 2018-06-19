@@ -9,7 +9,9 @@
 
 ## Download
 
+```sh
     git clone https://git.coding.net/lydiazly/scripts-sunpy.git
+```
 
 ## Install [SunPy](http://sunpy.org)
 
