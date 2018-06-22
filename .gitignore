@@ -1,7 +1,8 @@
+**/.ipynb_checkpoints/
+**/__pycache__/
+**/tmp/
 *.fits
 *.pyc
 *.png
-*.ipynb_checkpoints/
-*__pycache__/
-*tmp/
+core
 
