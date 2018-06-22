@@ -153,7 +153,7 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
         hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
         ix = ax1 * hx + ay1 * hy
         iy = ax2 * hx + ay2 * hy
-        # Interpolate to 2D spline functions
+        # Interpolate to 2D spline functions (over a rectangular mesh)
         fu = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapu.data.T)
         fv = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapv.data.T)
         fc = RectBivariateSpline(np.linspace(xmin, xmax, dimx), np.linspace(ymin, ymax, dimy), mapc.data.T)
