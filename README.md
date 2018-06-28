@@ -1,9 +1,9 @@
 # SunPy scripts & examples
 
-> Tested ( *Update: 2018-06-28* )<br>
-> Ubuntu 16.04 LTS<br>
-> Python 2.7.12 | Sunpy 0.9.0 | Astropy 2.0.6<br>
-> Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
+Tested ( *Update: 2018-06-28* )<br>
+Ubuntu 16.04 LTS<br>
+Python 2.7.12 | Sunpy 0.9.0 | Astropy 2.0.6<br>
+Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
 
 ---
 
