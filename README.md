@@ -82,4 +82,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in <span style="color:navy">plothmi/</span> .
+See examples in <span style="color:#3A589E">plothmi/</span> .
