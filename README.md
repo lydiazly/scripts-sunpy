@@ -9,9 +9,7 @@ Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
 
 ## Download
 
-```
-$ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
-```
+`$ git clone https://git.coding.net/lydiazly/scripts-sunpy.git`
 
 ## Install [SunPy](http://sunpy.org)
 
