@@ -17,11 +17,31 @@
 
 ## Examples
 
+* plothmi/example_plothmi.ipynb<br>
+Download (
+[HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html)
+|
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.ipynb)
+)&ensp;
+<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html" target="_blank">
+Preview
+</a>
+
+* plothmi/example_projection.ipynb<br>
+Download (
+[HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html)
+|
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.ipynb)
+)&ensp;
+<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html" target="_blank">
+Preview
+</a>
+
 Run scripts:
 
     $ python plothmi.py
 
-Open IPython notebooks:
+Open Jupyter notebooks:
 
     $ jupyter notebook example_plothmi.ipynb
 
