@@ -1,9 +1,9 @@
 # SunPy scripts & examples
 
-> Tested ( *Update: 2018-06-01* )<br>
+> Tested ( *Update: 2018-06-28* )<br>
 > Ubuntu 16.04 LTS<br>
-> Python [2.7.12] Sunpy [0.9.0] Astropy [2.0.6]<br>
-> Python [3.6.5] Sunpy [0.9.0] Astropy [3.0.3]<br>
+> Python 2.7.12 | Sunpy 0.9.0 | Astropy 2.0.6<br>
+> Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
 
 ---
 
@@ -21,11 +21,11 @@
 
 Run scripts:
 
-    python plothmi.py
+    $ python plothmi.py
 
 Open IPython notebooks:
 
-    jupyter notebook example_plothmi.ipynb
+    $ jupyter notebook example_plothmi.ipynb
 
 ## Get help
 
@@ -38,15 +38,13 @@ Python:
 
 Shell:
 
-``` sh
-pydoc usr_sunpy
-```
+    $ pydoc usr_sunpy
 
 ## Import user modules
 
-e.g. Import functions in *modules/usr_sunpy*
+e.g. Import functions in <font color=navy>modules/usr_sunpy.py</font>
 
-First append *./modules* to PYTHONPATH in your ~/.bashrc:
+First append <font color=navy>./modules</font> to <font color=blue>PYTHONPATH</font> in your <font color=navy>~/.bashrc</font>:
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -55,7 +53,7 @@ export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
 Then import in python:
 
 ``` python
-from usr_sunpy import *
+import usr_sunpy
 ```
 
 Or add the path temporarily in python:
@@ -63,5 +61,7 @@ Or add the path temporarily in python:
 ``` python
 import sys
 sys.path.append('../modules')  # If current location is plothmi/
-from usr_sunpy import *
+import usr_sunpy
 ```
+
+See examples in <font color=navy>plothmi/</font> .
