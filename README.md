@@ -9,9 +9,7 @@
 
 ## Download
 
-```sh
-    git clone https://git.coding.net/lydiazly/scripts-sunpy.git
-```
+    $ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 
 ## Install [SunPy](http://sunpy.org)
 
@@ -53,15 +51,15 @@ export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
 Then import in python:
 
 ``` python
-import usr_sunpy
+>>> import usr_sunpy
 ```
 
 Or add the path temporarily in python:
 
 ``` python
-import sys
-sys.path.append('../modules')  # If current location is plothmi/
-import usr_sunpy
+>>> import sys
+>>> sys.path.append('../modules')  # If current location is plothmi/
+>>> import usr_sunpy
 ```
 
 See examples in <font color=navy>plothmi/</font> .
