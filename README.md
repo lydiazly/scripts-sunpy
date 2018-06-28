@@ -62,7 +62,7 @@ Shell:
 
 e.g. Import functions in *modules/usr_sunpy.py*
 
-First append *./modules* to **PYTHONPATH** in your *~/.bashrc*:
+First append *./modules* to **PYTHONPATH** in your *~/.bashrc* :
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -82,4 +82,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in *plothmi/* .
+See examples in <span style="color:navy">plothmi/</span> .
