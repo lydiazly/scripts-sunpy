@@ -60,9 +60,9 @@ Shell:
 
 ## Import user modules
 
-e.g. Import functions in <font color=navy>modules/usr_sunpy.py</font>
+e.g. Import functions in *modules/usr_sunpy.py*
 
-First append <font color=navy>./modules</font> to <font color=blue>PYTHONPATH</font> in your <font color=navy>~/.bashrc</font>:
+First append *./modules* to <font color=blue>PYTHONPATH* in your *~/.bashrc*:
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -82,4 +82,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in <font color=navy>plothmi/</font> .
+See examples in *plothmi/* .
