@@ -1,6 +1,6 @@
 # SunPy scripts & examples
 
-Tested ( *Update: 2018-06-28* )<br>
+* Tested ( *Update: 2018-06-28* )<br>
 Ubuntu 16.04 LTS<br>
 Python 2.7.12 | Sunpy 0.9.0 | Astropy 2.0.6<br>
 Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
@@ -62,7 +62,7 @@ Shell:
 
 e.g. Import functions in *modules/usr_sunpy.py*
 
-First append *./modules* to **PYTHONPATH** in your *~/.bashrc* :
+First append&ensp;*./modules*&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -82,4 +82,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in <span style="color:#3A589E">plothmi/</span> .
+See examples in *plothmi/* .
