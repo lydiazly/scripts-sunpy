@@ -184,13 +184,13 @@ def image_to_helio(*smap):
     - Unit: arcsec
 
     [Parameters]
-    - smap: list of sunpy `GenericMap`, one or three elements.
+    - smap: `GenericMap`, one or three elements.
       - For scalar: `image_to_helio(smap)`
       - For vectors: `image_to_helio(smapx, smapy, smapz)`
 
     [Return]
-    - For scalar: a list of numpy `ndarray`: x_h, y_h
-    - For vectors: a list of sunpy `GenericMap`: smapx_h, smapy_h, smapz_h
+    - For scalar: x_h, y_h (type: `ndarray`)
+    - For vectors: smapx_h, smapy_h, smapz_h (type: `GenericMap`)
 
     [See also]
     http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates

@@ -36,13 +36,13 @@ Transform&nbsp;maps&nbsp;from&nbsp;image-coordinate&nbsp;to&nbsp;helio-coordinat
 -&nbsp;Unit:&nbsp;arcsec<br>
 &nbsp;<br>
 [Parameters]<br>
--&nbsp;smap:&nbsp;list&nbsp;of&nbsp;sunpy&nbsp;`GenericMap`,&nbsp;one&nbsp;or&nbsp;three&nbsp;elements.<br>
+-&nbsp;smap:&nbsp;`GenericMap`,&nbsp;one&nbsp;or&nbsp;three&nbsp;elements.<br>
 &nbsp;&nbsp;-&nbsp;For&nbsp;scalar:&nbsp;`<a href="#-image_to_helio">image_to_helio</a>(smap)`<br>
 &nbsp;&nbsp;-&nbsp;For&nbsp;vectors:&nbsp;`<a href="#-image_to_helio">image_to_helio</a>(smapx,&nbsp;smapy,&nbsp;smapz)`<br>
 &nbsp;<br>
 [Return]<br>
--&nbsp;For&nbsp;scalar:&nbsp;a&nbsp;list&nbsp;of&nbsp;numpy&nbsp;`ndarray`:&nbsp;x_h,&nbsp;y_h<br>
--&nbsp;For&nbsp;vectors:&nbsp;a&nbsp;list&nbsp;of&nbsp;sunpy&nbsp;`GenericMap`:&nbsp;smapx_h,&nbsp;smapy_h,&nbsp;smapz_h<br>
+-&nbsp;For&nbsp;scalar:&nbsp;x_h,&nbsp;y_h&nbsp;(type:&nbsp;`ndarray`)<br>
+-&nbsp;For&nbsp;vectors:&nbsp;smapx_h,&nbsp;smapy_h,&nbsp;smapz_h&nbsp;(type:&nbsp;`GenericMap`)<br>
 &nbsp;<br>
 [See&nbsp;also]<br>
 <a href="http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates">http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates</a><br>
