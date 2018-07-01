@@ -4,5 +4,6 @@
 *.fits
 *.pyc
 *.png
+*.bk
 core
 

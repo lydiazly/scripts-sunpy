@@ -1,9 +1,16 @@
 # SunPy scripts & examples
 
-* Tested ( *Update: 2018-06-28* )<br>
-Ubuntu 16.04 LTS<br>
-Python 2.7.12 | Sunpy 0.9.0 | Astropy 2.0.6<br>
-Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
+[ Tested ]
+
+Ubuntu 16.04 LTS
+Python|Sunpy|Astropy|Date
+:---:|:---:|:---:|:---:
+2.7.12| 0.9.0|2.0.6|2018-06-28
+3.6.5| 0.9.0|3.0.3|2018-06-28
+
+[ Update ]
+> *2018-07-01*&emsp;上传了 pdf 版本
+<br>
 
 ---
 
@@ -11,17 +18,23 @@ Python 3.6.5 | Sunpy 0.9.0 | Astropy 3.0.3<br>
 
 `$ git clone https://git.coding.net/lydiazly/scripts-sunpy.git`
 
+---
+
 ## Install [SunPy](http://sunpy.org)
 
 ( See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt) )
+
+---
 
 ## Examples
 
 * plothmi/example_plothmi.ipynb<br>
 Download (
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.ipynb)
+|
 [HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html)
 |
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.ipynb)
+[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.pdf)
 )&ensp;
 <a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html" target="_blank">
 Preview
@@ -29,9 +42,11 @@ Preview
 
 * plothmi/example_projection.ipynb<br>
 Download (
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.ipynb)
+|
 [HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html)
 |
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.ipynb)
+[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.pdf)
 )&ensp;
 <a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html" target="_blank">
 Preview
@@ -45,7 +60,11 @@ Open Jupyter notebooks:
 
     $ jupyter notebook example_plothmi.ipynb
 
-## Get help
+---
+
+## User modules
+
+### Get help
 
 Python:
 
@@ -58,11 +77,17 @@ Shell:
 
     $ pydoc usr_sunpy
 
-## Import user modules
+See this 
+<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/usr_sunpy.html" target="_blank">
+documentation preview
+</a>
+.
 
-e.g. Import functions in *modules/usr_sunpy.py*
+### Import
 
-First append&ensp;*./modules*&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
+e.g. Import functions in [modules/usr_sunpy.py](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/modules/usr_sunpy.py)
+
+First append&ensp;[modules/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -82,4 +107,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in *plothmi/* .
+See examples in [plothmi/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/plothmi) .
