@@ -233,9 +233,9 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     - For coords: (x, y)_helio = A22.T.I * (x, y)_image
     - For vectors: (U, V, W)_helio = A33 * (U, V, W)_image
 
-     A33 = [[ax1, ay1, az1],
-            [ax2, ay2, az2],
-            [ax3, ay3, az3]]
+     A33 = [[ax1, ax2, ax3],
+            [ay1, ay2, ay3],
+            [az1, az2, az3]]
     
     [Return] elements of a 2D array
             (use values instead of arrays just for easy reading & comparison)
