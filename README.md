@@ -9,7 +9,7 @@ Python|Sunpy|Astropy|Date
 3.6.5| 0.9.0|3.0.3|2018-06-28
 
 [ Update ]
-> *2018-07-01*&emsp;上传了 pdf 版本
+> *2018-07-01*&emsp;uploaded pdf version; modified doc of `usr_sunpy`
 <br>
 
 ---

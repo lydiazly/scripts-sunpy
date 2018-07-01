@@ -1,10 +1,10 @@
 '''
 User functions.
-[SunPy Version: 0.9.0]
-[See also] http://docs.sunpy.org/en/stable/code_ref/map.html
+- SunPy Version: 0.9.0
+- Reference http://docs.sunpy.org/en/stable/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
-# 2018-05-18 modified by Lydia
+# 2018-07-01 modified by Lydia
 from __future__ import division, print_function
 import astropy.units as u
 import numpy as np
@@ -15,26 +15,15 @@ def read_sdo(filename):
     ----------------------------------------------------------------------------
     Example of reading from a FITS file. Print the filename and dimensions.
     
-    [Properties]
-      data - a 2D numpy `ndarray` containingthe map data.
-             data[i, j]: j from the bottom, i from te left.
-      meta - a `dict` of the original image headr tags.
-    
-    [Return] a sunpy `GenericMap` object
-    
-    [Notes]
-    (From http://docs.sunpy.org)
-    A number of the properties of this class are returned as two-value named
-    tuples that can either be indexed by position ([0] or [1]) or be accessed
-    by the names (.x and .y) or (.axis1 and .axis2). Things that refer to
-    pixel axes use the .x, .y convention, where x and y refer to the FITS
-    axes (x for columns y for rows). Spatial axes use .axis1 and .axis2 which
-    correspond to the first and second axes in the header. axis1 corresponds
-    to the coordinate axis for x and axis2 corresponds to y.
+    [Return] a sunpy `GenericMap` or subclass(e.g. `HMIMap`) object
+    - data - a 2D numpy `ndarray`
+      data[i, j]: i from the bottom(y), j from te left(x).
+    - meta - a `dict` of the original image headr tags.
     
     [See also]
-    help(sunpy.map.GenericMap)
-    http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects
+    - help(sunpy.map.GenericMap)
+    - http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects
+
     ----------------------------------------------------------------------------
     '''
     import os
@@ -50,25 +39,26 @@ def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
     Plot image.
     
     [Plot Function]
-      plot_map(ax, smap, **kwargs)       -> `pcolormesh` from matplotlib
-      plot_map(ax, smap, X, Y, **kwargs) -> `imshow` from matplotlib
-    
+    - plot_map(ax, smap, **kwargs)       -> `pcolormesh` from matplotlib
+    - plot_map(ax, smap, X, Y, **kwargs) -> `imshow` from matplotlib
+
     [Parameters]
-    - ax: a matplotlib axes object
+    - ax: a matplotlib `Axes` object
     - smap: a sunpy `GenericMap`
     - coords: two 2D numpy `ndarray`s: (X, Y)
     - grid: draw grids or not
     - cmap: name of color map
-    - **kwargs:
+    - kwargs:
       - sunpy_kwargs: annotate, axes, title
       - matplotlib_kwargs:
-        If coords is None(default): use kwargs of `imshow`,
-        else: use kwargs of `pcolormesh`.
-    
+        If coords is None(default), use kwargs of `imshow`,
+        else use kwargs of `pcolormesh`.
+
     [Return] a matplotlib image object
-    
+
     [See also]
     http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
+
     ----------------------------------------------------------------------------
     '''
     if not isinstance(smap, sunpy.map.mapbase.GenericMap):
@@ -115,13 +105,14 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
     - iskip, jskip: number of skipped points in both dimensions
     - cmin: where mapc.data < cmin => set to zero
     - vmax: where norm(Vector) > vmax => set to vmax
-    - cmap: name of color map
-    - scale_units, ..., **kwargs: kwargs of `quiver`
+    - cmap: name of a color map
+    - scale_units, ..., kwargs: kwargs of `quiver`
     
-    [Return] a matplotlib image object
+    [Return] a matplotlib `artist`(image object)
     
     [See also]
     https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
+    
     ----------------------------------------------------------------------------
     '''
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in (mapu, mapv, mapc)):
@@ -188,20 +179,22 @@ def image_to_helio(*smap):
     '''
     ----------------------------------------------------------------------------
     Transform maps from image-coordinate to helio-coordinate.
-    Helo-coordinate: Helioprojective(Cartesian) system
-    Matrix: A22 or A33 get from `usr_sunpy.proj_matrix`
-    Unit: arcsec
-    
-    [Parameters] *smap: 1 or 3 args, sunpy `GenericMap`s
-    
+    - Helo-coordinate: Helioprojective(Cartesian) system
+    - Matrix: A22 or A33 get from `usr_sunpy.proj_matrix`
+    - Unit: arcsec
+
+    [Parameters]
+    - smap: list of sunpy `GenericMap`, one or three elements.
+      - For scalar: `image_to_helio(smap)`
+      - For vectors: `image_to_helio(smapx, smapy, smapz)`
+
     [Return]
-    For scalar - image_to_helio(smap):
-    -> numpy `ndarray`s: x_h, y_h
-    For vectors - image_to_helio(smapx, smapy, smapz):
-    -> sunpy `GenericMap`s: smapx_h, smapy_h, smapz_h
-    
+    - For scalar: a list of numpy `ndarray`: x_h, y_h
+    - For vectors: a list of sunpy `GenericMap`: smapx_h, smapy_h, smapz_h
+
     [See also]
     http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates
+
     ----------------------------------------------------------------------------
     '''
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
@@ -237,12 +230,17 @@ def image_to_helio(*smap):
 def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     '''
     ----------------------------------------------------------------------------
-    For coords: (x, y)_helio = A22.T.I dot (x, y)_image
-    For vectors: (U, V, W)_helio = A33 dot (U, V, W)_image
+    - For coords: (x, y)_helio = A22.T.I * (x, y)_image
+    - For vectors: (U, V, W)_helio = A33 * (U, V, W)_image
+
+     A33 = [[ax1, ay1, az1],
+            [ax2, ay2, az2],
+            [ax3, ay3, az3]]
     
-    [Return] 2D numpy `ndarray`s
-      default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
-        dim=2: ax1, ax2, ay1, ay2
+    [Return] elements of a 2D array
+            (use values instead of arrays just for easy reading & comparison)
+    - default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+    -   dim=2: ax1, ax2, ay1, ay2
     
     [Parameters]
     -  P: the angle of the northern extremity, CCW from the north point of the disk.
@@ -251,8 +249,9 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     - Lc: the longitude of the the referenced point.
     - Bc: the latitude of the referenced point.
     
-    [References]
+    [Reference]
     http://link.springer.com/10.1007/BF00158295
+
     ----------------------------------------------------------------------------
     '''
     ax1 =  -np.sin(B0) * np.sin(P) * np.sin(Lc - L0) + np.cos(P) * np.cos(Lc - L0)
