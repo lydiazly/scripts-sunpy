@@ -139,9 +139,8 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
         X, Y = coords
         P, L0, B0, Bc, Lc, xmin, xmax, ymin, ymax, dimx, dimy, *_ = _get_image_params(mapc)
         ax1, ax2, ay1, ay2 = proj_matrix(P, L0, B0, Bc, Lc, 2)
-        hx = np.linspace(X.min(), X.max(), dimx)
-        hy = np.linspace(Y.min(), Y.max(), dimy)
         hx, hy = np.mgrid[X.min():X.max():dimx*1j, Y.min():Y.max():dimy*1j]
+        # (x, y)_image = A22.T * (x, y)_helio
         ix = ax1 * hx + ay1 * hy
         iy = ax2 * hx + ay2 * hy
         # Interpolate to 2D spline functions (over a rectangular mesh)
