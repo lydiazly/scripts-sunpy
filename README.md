@@ -1,5 +1,9 @@
 # SunPy scripts & examples
 
+**[Blog] https://lydiazly.coding.me/python-notes**
+
+---
+
 [ Tested ]
 
 Ubuntu 16.04 LTS
@@ -9,7 +13,7 @@ Python|Sunpy|Astropy|Date
 3.6.5| 0.9.0|3.0.3|2018-06-28
 
 [ Update ]
-> *2018-07-01*&emsp;uploaded pdf version; modified doc of [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)
+> *2018-07-01*&emsp;Uploaded pdf version; modified doc of [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)
 <br>
 
 ---
@@ -36,7 +40,7 @@ Download (
 |
 [PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.pdf)
 )&ensp;
-<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html" target="_blank">
+<a href="https://lydiazly.coding.me/python-notes/_pages/example_plothmi.html" target="_blank">
 Preview
 </a>
 
@@ -48,7 +52,7 @@ Download (
 |
 [PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.pdf)
 )&ensp;
-<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html" target="_blank">
+<a href="https://lydiazly.coding.me/python-notes/_pages/example_projection.html" target="_blank">
 Preview
 </a>
 
@@ -78,7 +82,7 @@ Shell:
     $ pydoc usr_sunpy
 
 See this 
-<a href="http://htmlpreview.github.io/?https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/usr_sunpy.html" target="_blank">
+<a href="https://lydiazly.coding.me/python-notes/_pages/usr_sunpy.html" target="_blank">
 documentation preview
 </a>
 .
