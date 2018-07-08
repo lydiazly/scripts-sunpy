@@ -5,10 +5,11 @@ User functions.
 '''
 # 2017-12-11 written by Lydia
 # 2018-07-01 modified by Lydia
+# 2018-07-08 modified by Lydia: Add funcs, import astropy & sunpy within funcs.
 from __future__ import division, print_function
-import astropy.units as u
+# import astropy.units as u
 import numpy as np
-import sunpy.map
+# import sunpy.map
 #======================================================================|
 def read_sdo(filename):
     '''
@@ -26,6 +27,8 @@ def read_sdo(filename):
 
     ----------------------------------------------------------------------------
     '''
+    import astropy.units as u
+    import sunpy.map
     import os
     smap = sunpy.map.Map(filename)  # Read & return a `GenericMap`
     print('%s\t%s' % (os.path.basename(filename),
@@ -61,6 +64,7 @@ def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
 
     ----------------------------------------------------------------------------
     '''
+    import sunpy.map
     if not isinstance(smap, sunpy.map.mapbase.GenericMap):
         raise TypeError("smap should be a sunpy GenericMap.")
     if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
@@ -115,6 +119,8 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
     
     ----------------------------------------------------------------------------
     '''
+    import astropy.units as u
+    import sunpy.map
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in (mapu, mapv, mapc)):
         raise TypeError("mapu, mapv, mapc should be sunpy GenericMaps.")
     if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
@@ -196,6 +202,7 @@ def image_to_helio(*smap):
 
     ----------------------------------------------------------------------------
     '''
+    import sunpy.map
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
         raise TypeError("*smap should be 1 or 3 sunpy GenericMaps.")
     
@@ -224,6 +231,32 @@ def image_to_helio(*smap):
         return hmapx, hmapy, hmapz
     else:
         raise ValueError('The number of arguments must be 1 or 3.')
+
+#======================================================================|
+def tai(*time):
+    '''
+    [Parameters]
+    - time: time string such as '2010-01-01T00:00:00'
+
+    [Return]
+    - len(time) == 1: TAI `Time` object
+    - len(time) > 1: list of TAI `Time` objects
+
+    [See also]
+    - http://docs.astropy.org/en/stable/time/
+    - http://docs.sunpy.org/en/stable/guide/time.html
+    '''
+    from sunpy.time import parse_time
+    try:
+        [parse_time(i) for i in time]
+    except ValueError as e:
+        print('ValueError:', e)
+    import astropy.time
+    taitime = [astropy.time.Time('T'.join(i.split('_')[:2]), scale='tai') for i in time]
+    if len(taitime) > 1:
+        return taitime
+    else:
+        return taitime[0]
 
 #======================================================================|
 def proj_matrix(P, L0, B0, Bc, Lc, *dim):
@@ -276,6 +309,7 @@ def _get_image_params(smap):
     '''
     [Return] P, L0, B0, Bc, Lc, xmin, xmax, ymin, ymax, dimy, dimx, dx, dy
     '''
+    import astropy.units as u
     dimy, dimx = smap.data.shape  # dimy(vertical) goes first
     P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
     L0 = np.deg2rad(smap.heliographic_longitude.value)  # The longitude of the center of the disk.
