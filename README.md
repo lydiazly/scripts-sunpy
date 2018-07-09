@@ -1,32 +1,38 @@
 # SunPy scripts & examples
 
-**[Blog] https://lydiazly.coding.me/python-notes**
-
----
-
-[ Tested ]
-
-Ubuntu 16.04 LTS
-Python|Sunpy|Astropy|Date
-:---:|:---:|:---:|:---:
-2.7.12| 0.9.0|2.0.6|2018-06-28
-3.6.5| 0.9.0|3.0.3|2018-06-28
+[ Blog ] **NEW!**<br>
+https://lydiazly.coding.me/python-notes
 
 [ Update ]
 > *2018-07-01*&emsp;Uploaded pdf version; modified doc of [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)
 <br>
 
+[ Tested ]
+
+Ubuntu 16.04 LTS
+Date|Python|Sunpy|NumPy|SciPy|Matplotlib|Astropy|Pandas
+:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+2018-06-28|2.7.12|0.9.0|1.14.4|1.1.0|2.2.2|2.0.6|0.22.0
+2018-07-08|3.6.5|0.9.0|1.14.5|1.1.0|2.2.2|3.0.3|0.23.0
+
 ---
 
 ## Download
 
-`$ git clone https://git.coding.net/lydiazly/scripts-sunpy.git`
+    $ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
 
 ---
 
 ## Install [SunPy](http://sunpy.org)
 
 ( See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt) )
+
+SunPy Installation Information:
+
+``` python
+>>> import sunpy
+>>> sunpy.util.system_info()
+```
 
 ---
 
