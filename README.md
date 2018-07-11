@@ -4,7 +4,9 @@
 https://lydiazly.coding.me/python-notes
 
 [ Update ]
-> *2018-07-01*&emsp;Uploaded pdf version; modified doc of [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)
+> *2018-07-11*&emsp;Add functions in [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)<br>
+> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Add examples of Fido.<br>
+> *2018-07-01*&emsp;Uploaded pdf version; modified doc
 <br>
 
 [ Tested ]
@@ -39,28 +41,22 @@ SunPy Installation Information:
 ## Examples
 
 * plothmi/example_plothmi.ipynb<br>
-Download (
+[
 [Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.ipynb)
 |
-[HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.html)
+[HTML](https://lydiazly.coding.me/python-notes/_pages/example_plothmi.html)
 |
 [PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.pdf)
-)&ensp;
-<a href="https://lydiazly.coding.me/python-notes/_pages/example_plothmi.html" target="_blank">
-Preview
-</a>
+]
 
 * plothmi/example_projection.ipynb<br>
-Download (
+[
 [Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.ipynb)
 |
-[HTML](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.html)
+[HTML](https://lydiazly.coding.me/python-notes/_pages/example_projection.html)
 |
 [PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.pdf)
-)&ensp;
-<a href="https://lydiazly.coding.me/python-notes/_pages/example_projection.html" target="_blank">
-Preview
-</a>
+]
 
 Run scripts:
 
