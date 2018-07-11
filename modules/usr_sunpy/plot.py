@@ -1,39 +1,15 @@
 '''
-User functions.
 - SunPy Version: 0.9.0
 - Reference http://docs.sunpy.org/en/stable/code_ref/map.html
 '''
 # 2017-12-11 written by Lydia
 # 2018-07-01 modified by Lydia
-# 2018-07-08 modified by Lydia: Add funcs, import astropy & sunpy within funcs.
-from __future__ import division, print_function
-# import astropy.units as u
+from __future__ import absolute_import, division, print_function
+import astropy.units as u
 import numpy as np
-# import sunpy.map
-#======================================================================|
-def read_sdo(filename):
-    '''
-    ----------------------------------------------------------------------------
-    Example of reading from a FITS file. Print the filename and dimensions.
-    
-    [Return] a sunpy `GenericMap` or subclass(e.g. `HMIMap`) object
-    - data - a 2D numpy `ndarray`
-      data[i, j]: i from the bottom(y), j from te left(x).
-    - meta - a `dict` of the original image headr tags.
-    
-    [See also]
-    - help(sunpy.map.GenericMap)
-    - http://docs.sunpy.org/en/stable/code_ref/map.html#using-map-objects
+import sunpy.map
 
-    ----------------------------------------------------------------------------
-    '''
-    import astropy.units as u
-    import sunpy.map
-    import os
-    smap = sunpy.map.Map(filename)  # Read & return a `GenericMap`
-    print('%s\t%s' % (os.path.basename(filename),
-          list(map(int, u.Quantity(smap.dimensions).value))))
-    return smap
+__all__ = ['plot_map', 'plot_vmap', 'image_to_helio', 'proj_matrix']
 
 #======================================================================|
 def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
@@ -57,14 +33,13 @@ def plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs):
         If coords is None(default), use kwargs of `imshow`,
         else use kwargs of `pcolormesh`.
 
-    [Return] a matplotlib image object
+    [Returns] a matplotlib image object
 
     [See also]
     http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
 
     ----------------------------------------------------------------------------
     '''
-    import sunpy.map
     if not isinstance(smap, sunpy.map.mapbase.GenericMap):
         raise TypeError("smap should be a sunpy GenericMap.")
     if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
@@ -112,15 +87,13 @@ def plot_vmap(ax, mapu, mapv, mapc, coords=None,
     - cmap: name of a color map
     - scale_units, ..., kwargs: kwargs of `quiver`
     
-    [Return] a matplotlib `artist`(image object)
+    [Returns] a matplotlib `artist`(image object)
     
     [See also]
     https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
     
     ----------------------------------------------------------------------------
     '''
-    import astropy.units as u
-    import sunpy.map
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in (mapu, mapv, mapc)):
         raise TypeError("mapu, mapv, mapc should be sunpy GenericMaps.")
     if coords and (len(coords) != 2 or not any(isinstance(i, np.ndarray) for i in coords)):
@@ -193,7 +166,7 @@ def image_to_helio(*smap):
       - For scalar: `image_to_helio(smap)`
       - For vectors: `image_to_helio(smapx, smapy, smapz)`
 
-    [Return]
+    [Returns]
     - For scalar: x_h, y_h (type: `ndarray`)
     - For vectors: smapx_h, smapy_h, smapz_h (type: `GenericMap`)
 
@@ -202,7 +175,6 @@ def image_to_helio(*smap):
 
     ----------------------------------------------------------------------------
     '''
-    import sunpy.map
     if not any(isinstance(i, sunpy.map.mapbase.GenericMap) for i in smap):
         raise TypeError("*smap should be 1 or 3 sunpy GenericMaps.")
     
@@ -233,32 +205,6 @@ def image_to_helio(*smap):
         raise ValueError('The number of arguments must be 1 or 3.')
 
 #======================================================================|
-def tai(*time):
-    '''
-    [Parameters]
-    - time: time string such as '2010-01-01T00:00:00'
-
-    [Return]
-    - len(time) == 1: TAI `Time` object
-    - len(time) > 1: list of TAI `Time` objects
-
-    [See also]
-    - http://docs.astropy.org/en/stable/time/
-    - http://docs.sunpy.org/en/stable/guide/time.html
-    '''
-    from sunpy.time import parse_time
-    try:
-        [parse_time(i) for i in time]
-    except ValueError as e:
-        print('ValueError:', e)
-    import astropy.time
-    taitime = [astropy.time.Time('T'.join(i.split('_')[:2]), scale='tai') for i in time]
-    if len(taitime) > 1:
-        return taitime
-    else:
-        return taitime[0]
-
-#======================================================================|
 def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     '''
     ----------------------------------------------------------------------------
@@ -269,10 +215,6 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
             [ay1, ay2, ay3],
             [az1, az2, az3]]
     
-    [Return] elements of a 2D array
-            (use values instead of arrays just for easy reading & comparison)
-    - default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
-    -   dim=2: ax1, ax2, ay1, ay2
     
     [Parameters]
     -  P: the angle of the northern extremity, CCW from the north point of the disk.
@@ -281,6 +223,11 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
     - Lc: the longitude of the the referenced point.
     - Bc: the latitude of the referenced point.
     
+    [Returns] elements of a 2D array
+            (use values instead of arrays just for easy reading & comparison)
+    - default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+    -   dim=2: ax1, ax2, ay1, ay2
+
     [Reference]
     http://link.springer.com/10.1007/BF00158295
 
@@ -307,9 +254,8 @@ def proj_matrix(P, L0, B0, Bc, Lc, *dim):
 #======================================================================|
 def _get_image_params(smap):
     '''
-    [Return] P, L0, B0, Bc, Lc, xmin, xmax, ymin, ymax, dimy, dimx, dx, dy
+    [Returns] P, L0, B0, Bc, Lc, xmin, xmax, ymin, ymax, dimy, dimx, dx, dy
     '''
-    import astropy.units as u
     dimy, dimx = smap.data.shape  # dimy(vertical) goes first
     P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
     L0 = np.deg2rad(smap.heliographic_longitude.value)  # The longitude of the center of the disk.

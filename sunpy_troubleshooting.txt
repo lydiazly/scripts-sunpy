@@ -1,4 +1,7 @@
-TROUBLESHOOTING [SunPy 0.9.0]
+TROUBLESHOOTING
+
+SunPy 0.9.0
+2018-07-11
 -----------------------------
 
  === conda安装 ===
@@ -32,6 +35,9 @@ with np.errstate(invalid='ignore'):
 # Suppress other warnings, e.g.
 import warnings
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore", category=UserWarning)
+    warnings.simplefilter("ignore", category=<UserWarning>)
     ...  # Your code
     ...
+
+* sunpy.time.parse_time 没有 "%Y-%m-%dT%H:%M:%SZ" 这个格式
+修改和执行: ./scripts/sunpy-add-time-fmt

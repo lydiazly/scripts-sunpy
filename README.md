@@ -88,7 +88,7 @@ Shell:
     $ pydoc usr_sunpy
 
 See this 
-<a href="https://lydiazly.coding.me/python-notes/_pages/usr_sunpy.html" target="_blank">
+<a href="https://lydiazly.coding.me/python-notes/usr_sunpy.html" target="_blank">
 documentation preview
 </a>
 .

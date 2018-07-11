@@ -3,9 +3,15 @@
 
 User functions.
 - SunPy Version: 0.9.0
+
+---
+<h1 id="usr_sunpy.basic">usr_sunpy.basic</h1>
+
+
+- SunPy Version: 0.9.0
 - Reference http://docs.sunpy.org/en/stable/code_ref/map.html
 
-<h2 id="usr_sunpy.read_sdo">read_sdo</h2>
+<h2 id="usr_sunpy.basic.read_sdo">read_sdo</h2>
 
 ```python
 read_sdo(filename)
@@ -14,7 +20,7 @@ read_sdo(filename)
 ----------------------------------------------------------------------------
 Example of reading from a FITS file. Print the filename and dimensions.
 
-[Return] a sunpy `GenericMap` or subclass(e.g. `HMIMap`) object
+[Returns] a sunpy `GenericMap` or subclass(e.g. `HMIMap`) object
 - data - a 2D numpy `ndarray`
   data[i, j]: i from the bottom(y), j from te left(x).
 - meta - a `dict` of the original image headr tags.
@@ -25,7 +31,34 @@ Example of reading from a FITS file. Print the filename and dimensions.
 
 ----------------------------------------------------------------------------
 
-<h2 id="usr_sunpy.plot_map">plot_map</h2>
+<h2 id="usr_sunpy.basic.tai">tai</h2>
+
+```python
+tai(*timestr)
+```
+
+Warp time strings as TAI time.
+
+[Parameters]
+- timestr: time strings
+  e.g. '2010-01-01T00:00:00', '2010.01.01_00:00:00_TAI'
+
+[Returns]
+- len(timestr) == 1: a TAI `Time` object
+- len(timestr) > 1: a list of TAI `Time` objects
+
+[See also]
+- http://docs.astropy.org/en/stable/time/
+- http://docs.sunpy.org/en/stable/guide/time.html
+
+---
+<h1 id="usr_sunpy.plot">usr_sunpy.plot</h1>
+
+
+- SunPy Version: 0.9.0
+- Reference http://docs.sunpy.org/en/stable/code_ref/map.html
+
+<h2 id="usr_sunpy.plot.plot_map">plot_map</h2>
 
 ```python
 plot_map(ax, smap, coords=None, grid=False, cmap='gray', **kwargs)
@@ -50,14 +83,14 @@ Plot image.
     If coords is None(default), use kwargs of `imshow`,
     else use kwargs of `pcolormesh`.
 
-[Return] a matplotlib image object
+[Returns] a matplotlib image object
 
 [See also]
 http://docs.sunpy.org/en/stable/code_ref/map.html#sunpy.map.mapbase.GenericMap.plot
 
 ----------------------------------------------------------------------------
 
-<h2 id="usr_sunpy.plot_vmap">plot_vmap</h2>
+<h2 id="usr_sunpy.plot.plot_vmap">plot_vmap</h2>
 
 ```python
 plot_vmap(ax, mapu, mapv, mapc, coords=None, iskip=10, jskip=10, cmin=0.0, vmax=1000.0, cmap='binary', scale_units='xy', scale=20.0, minlength=0.05, width=0.003, headlength=6, headwidth=5, headaxislength=3, **kwargs)
@@ -80,14 +113,14 @@ Vector plot.
 - cmap: name of a color map
 - scale_units, ..., kwargs: kwargs of `quiver`
 
-[Return] a matplotlib `artist`(image object)
+[Returns] a matplotlib `artist`(image object)
 
 [See also]
 https://matplotlib.org/devdocs/api/_as_gen/matplotlib.axes.Axes.quiver.html#matplotlib-axes-axes-quiver
 
 ----------------------------------------------------------------------------
 
-<h2 id="usr_sunpy.image_to_helio">image_to_helio</h2>
+<h2 id="usr_sunpy.plot.image_to_helio">image_to_helio</h2>
 
 ```python
 image_to_helio(*smap)
@@ -104,7 +137,7 @@ Transform maps from image-coordinate to helio-coordinate.
   - For scalar: `image_to_helio(smap)`
   - For vectors: `image_to_helio(smapx, smapy, smapz)`
 
-[Return]
+[Returns]
 - For scalar: x_h, y_h (type: `ndarray`)
 - For vectors: smapx_h, smapy_h, smapz_h (type: `GenericMap`)
 
@@ -113,7 +146,7 @@ http://docs.sunpy.org/en/stable/code_ref/coordinates.html#sunpy-coordinates
 
 ----------------------------------------------------------------------------
 
-<h2 id="usr_sunpy.proj_matrix">proj_matrix</h2>
+<h2 id="usr_sunpy.plot.proj_matrix">proj_matrix</h2>
 
 ```python
 proj_matrix(P, L0, B0, Bc, Lc, *dim)
@@ -127,10 +160,6 @@ proj_matrix(P, L0, B0, Bc, Lc, *dim)
         [ay1, ay2, ay3],
         [az1, az2, az3]]
 
-[Return] elements of a 2D array
-        (use values instead of arrays just for easy reading & comparison)
-- default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
--   dim=2: ax1, ax2, ay1, ay2
 
 [Parameters]
 -  P: the angle of the northern extremity, CCW from the north point of the disk.
@@ -138,6 +167,11 @@ proj_matrix(P, L0, B0, Bc, Lc, *dim)
 - B0: the latitude of the center of the disk.
 - Lc: the longitude of the the referenced point.
 - Bc: the latitude of the referenced point.
+
+[Returns] elements of a 2D array
+        (use values instead of arrays just for easy reading & comparison)
+- default: ax1, ax2, ax3, ay1, ay2, ay3, az1, az2, az3
+-   dim=2: ax1, ax2, ay1, ay2
 
 [Reference]
 http://link.springer.com/10.1007/BF00158295
