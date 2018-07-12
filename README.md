@@ -1,13 +1,19 @@
 # SunPy scripts & examples
 
-[ Blog ] **NEW!**<br>
-https://lydiazly.coding.me/python-notes
+
+
+
+[ Blog ] **NEW!** https://lydiazly.coding.me/python-notes
 
 [ Update ]
+> *2018-07-12*&emsp;Fix links in notebooks.<br>
 > *2018-07-11*&emsp;Add functions in [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)<br>
 > &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Add examples of Fido.<br>
+> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Move files to blog.<br>
 > *2018-07-01*&emsp;Uploaded pdf version; modified doc
 <br>
+
+Please let me know if you have any questions: lydiazly@nju.edu.cn
 
 [ Tested ]
 
@@ -58,6 +64,26 @@ SunPy Installation Information:
 [PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.pdf)
 ]
 
+&emsp;&emsp;**+++ NEW! +++**
+
+* fido/fido.ipynb<br>
+[
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/fido.ipynb)
+|
+[HTML](https://lydiazly.coding.me/python-notes/_pages/fido.html)
+|
+[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/fido.pdf)
+]
+
+* fido/jsoc.ipynb<br>
+[
+[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.ipynb)
+|
+[HTML](https://lydiazly.coding.me/python-notes/_pages/jsoc.html)
+|
+[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.pdf)
+]
+
 Run scripts:
 
     $ python plothmi.py
@@ -72,16 +98,18 @@ Open Jupyter notebooks:
 
 ### Get help
 
+**+++ NEW! +++**
+
 Python:
 
 ``` python
 >>> import usr_sunpy
->>> help(usr_sunpy)
+>>> help(usr_sunpy.plot)
 ```
 
 Shell:
 
-    $ pydoc usr_sunpy
+    $ pydoc usr_sunpy.plot
 
 See this 
 <a href="https://lydiazly.coding.me/python-notes/usr_sunpy.html" target="_blank">
@@ -91,8 +119,6 @@ documentation preview
 
 ### Import
 
-e.g. Import functions in [modules/usr_sunpy.py](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/modules/usr_sunpy.py)
-
 First append&ensp;[modules/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
 
 ``` sh
@@ -101,8 +127,12 @@ export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
 
 Then import in python:
 
+**+++ NEW! +++**
+
 ``` python
 >>> import usr_sunpy
+>>> import usr_sunpy.plot
+>>> from usr_sunpy.plot import <function_name>
 ```
 
 Or add the path temporarily in python:
@@ -113,4 +143,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in [plothmi/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/plothmi) .
+See examples in [plothmi/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/plothmi) ,&ensp;[fido/jsoc.ipynb](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.ipynb).
