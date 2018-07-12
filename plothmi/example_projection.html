@@ -198,6 +198,8 @@ th {
   *,
   *:before,
   *:after {
+    background: transparent !important;
+    color: #000 !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
@@ -205,8 +207,19 @@ th {
   a:visited {
     text-decoration: underline;
   }
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
   pre,
   blockquote {
+    border: 1px solid #999;
     page-break-inside: avoid;
   }
   thead {
@@ -11796,7 +11809,7 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><a href="https://pan.baidu.com/s/1nwsIcDr">Example Data</a> <span style="color:gray">(pswd:
 s5re)</span></p>
-<p><a href="https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules">User Module Download</a> (<a href="_pages/usr_sunpy.html">help</a>)</p>
+<p><a href="https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules">User Module Download</a> (<a href="https://lydiazly.coding.me/python-notes/usr_sunpy.html">help</a>)</p>
 
 </div>
 </div>
@@ -12002,10 +12015,10 @@ Rotation angle = -180.013600 deg (CCW)
 
 
 
-<div id="1ccb6ada-03f9-4830-9bec-36ac13017855"></div>
+<div id="8324c998-f7df-4a42-a0dc-c12797a00bdb"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#1ccb6ada-03f9-4830-9bec-36ac13017855');
+var element = $('#8324c998-f7df-4a42-a0dc-c12797a00bdb');
 /* Put everything inside the global mpl namespace */
 window.mpl = {};
 
@@ -12826,10 +12839,10 @@ if (IPython.notebook.kernel != null) {
 
 
 
-<div id="a81a9488-d70d-4d6d-9b51-504a8fd8c5d6"></div>
+<div id="c56fbf81-c1cb-49f8-8ce1-4c911465ca74"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#a81a9488-d70d-4d6d-9b51-504a8fd8c5d6');
+var element = $('#c56fbf81-c1cb-49f8-8ce1-4c911465ca74');
 /* Put everything inside the global mpl namespace */
 window.mpl = {};
 
@@ -13691,10 +13704,10 @@ if (IPython.notebook.kernel != null) {
 
 
 
-<div id="b5166e6a-c2bc-4537-9ddd-9c57342514e2"></div>
+<div id="53fa16f3-208d-4d39-b8f9-f977c87f8480"></div>
 <div class="output_subarea output_javascript ">
 <script type="text/javascript">
-var element = $('#b5166e6a-c2bc-4537-9ddd-9c57342514e2');
+var element = $('#53fa16f3-208d-4d39-b8f9-f977c87f8480');
 /* Put everything inside the global mpl namespace */
 window.mpl = {};
 
