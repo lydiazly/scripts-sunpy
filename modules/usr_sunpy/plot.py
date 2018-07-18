@@ -260,7 +260,7 @@ def _get_image_params(smap):
     P = 0.  # The angle of the northern extremity, CCW from the north point of the disk.
     L0 = np.deg2rad(smap.heliographic_longitude.value)  # The longitude of the center of the disk.
     B0 = np.deg2rad(smap.heliographic_latitude.value)  # The latitude of the center of the disk.
-    dx, dy = (smap.meta['cdelt1'], smap.meta['cdelt2'])  # arcsec/pix
+    dx, dy = (smap.meta['cdelt1'], smap.meta['cdelt2'])  # arcsec/pix, smap.meta['cdelt1'] == smap.scale.axis1.value
     xmin = - dx * (dimx - 1) / 2.  # Set (0, 0) at the center of the image.
     ymin = - dy * (dimy - 1) / 2.
     xmax = dx * (dimx - 1) / 2.
