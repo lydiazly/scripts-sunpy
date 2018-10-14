@@ -1,6 +1,8 @@
 '''
 User functions.
-- SunPy Version: 0.9.0
+- SunPy Version: 0.9.3
+
+------------------------------------------------------------------------
 '''
 # 2017-12-11 written by Lydia
 # 2018-07-11 modified by Lydia

@@ -6,6 +6,7 @@
 [ Blog ] **NEW!** https://lydiazly.coding.me/python-notes
 
 [ Update ]
+> *2018-10-13*&emsp;Upgrade to SunPy 0.9.3<br>
 > *2018-07-12*&emsp;Fix links in notebooks.<br>
 > *2018-07-11*&emsp;Add functions in [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)<br>
 > &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Add examples of Fido.<br>
@@ -18,10 +19,12 @@ Please let me know if you have any questions: lydiazly@nju.edu.cn
 [ Tested ]
 
 Ubuntu 16.04 LTS
+
 Date|Python|Sunpy|NumPy|SciPy|Matplotlib|Astropy|Pandas
 :---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
-2018-06-28|2.7.12|0.9.0|1.14.4|1.1.0|2.2.2|2.0.6|0.22.0
+2018-10-13|3.6.6|**0.9.3**|1.15.2|1.1.0|3.0.0|3.0.4|0.23.4
 2018-07-08|3.6.5|0.9.0|1.14.5|1.1.0|2.2.2|3.0.3|0.23.0
+2018-06-28|2.7.12|0.9.0|1.14.4|1.1.0|2.2.2|2.0.6|0.22.0
 
 ---
 

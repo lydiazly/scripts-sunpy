@@ -6,7 +6,7 @@ Read FITS data & Plot
 [Example Data] https://pan.baidu.com/s/1nwsIcDr (pswd: s5re)
 '''
 # 2017-12-11 written by Lydia
-# 2018-04-25 modified by Lydia
+# 2018-10-13 modified by Lydia
 
 from __future__ import division, print_function
 
@@ -22,121 +22,115 @@ import sunpy.map
 
 from copy import deepcopy
 import os, time
+import warnings
 
 # [usr_sunpy] Funcions: read_sdo, plot_map, plot_vmap, image_to_helio, ...
 import sys
 sys.path.append('../modules')
 from usr_sunpy import read_sdo, plot_map, plot_vmap, image_to_helio
+from usr_sunpy import aiaprep_usr as aiaprep
 
 #======================================================================|
 # Global Parameters
 
 # Data
-fname1 = 'data/hmi.B_720s.20150827_052400_TAI.field.fits'
-fname2 = 'data/hmi.B_720s.20150827_052400_TAI.inclination.fits'
-fname3 = 'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits'
-fname4 = 'data/hmi.B_720s.20150827_052400_TAI.disambig.fits'
+fnames = ('data/hmi.B_720s.20150827_052400_TAI.field.fits',
+          'data/hmi.B_720s.20150827_052400_TAI.inclination.fits',
+          'data/hmi.B_720s.20150827_052400_TAI.azimuth.fits',
+          'data/hmi.B_720s.20150827_052400_TAI.disambig.fits')
 
 # Range of submap (arcsec)
-xmin, xmax = (300., 800.)
-ymin, ymax = (-500., -100.)
+xrange = (300., 800.) * u.arcsec
+yrange = (-500., -100.) * u.arcsec
 
 #======================================================================|
 # Read data
 
 print('[Path] %s' % os.getcwd())
 print('Reading data...')
-mapb = read_sdo(fname1)
-mapi = read_sdo(fname2)
-mapa = read_sdo(fname3)
-mapd = read_sdo(fname4)
+mapb, mapi, mapa, mapd = list(map(read_sdo, fnames))
 # Disambiguate
 # mapa.data[np.isfinite(mapd.data) & (mapd.data > 3)] += 180.
 mapa.data[mapd.data > 3] += 180.
 
 t0 = time.time()
-dtor = np.pi/180.
 mapbx = deepcopy(mapb)
 mapby = deepcopy(mapb)
 mapbz = deepcopy(mapb)
-mapbx.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.cos((mapa.data + 270.) * dtor)
-mapby.data[:] = mapb.data * np.sin(mapi.data * dtor) * np.sin((mapa.data + 270.) * dtor)
-mapbz.data[:] = mapb.data * np.cos(mapi.data * dtor)
+mapbx.data[:] = mapb.data * np.sin(np.deg2rad(mapi.data)) * np.cos(np.deg2rad(mapa.data + 270.))
+mapby.data[:] = mapb.data * np.sin(np.deg2rad(mapi.data)) * np.sin(np.deg2rad(mapa.data + 270.))
+mapbz.data[:] = mapb.data * np.cos(np.deg2rad(mapi.data))
 print('(Time of getting Bvec: %f sec)' % (time.time() - t0))
+# Suppress metadata warnings
+for i in {mapbx, mapby, mapbz}:
+    i.meta['hgln_obs'] = 0.
 
-# Rotate(CCW)
-# `rotate` function will remove old CROTA keywords.
-order = 1  # Test: 1 or 3 is ok
-# Suppress metadata warnings if sunpy >= 0.9.0:
-mapbx.meta['hgln_obs'] = 0.; mapby.meta['hgln_obs'] = 0.; mapbz.meta['hgln_obs'] = 0.
-print('Correcting image axes...')
+# rotate(CCW) & recenter & rescale
+print('level 1 -> level 1.5 ...')
 t0 = time.time()
-# Suppress warnings of NaNs:
-with np.errstate(invalid='ignore'):
-    mapbx = mapbx.rotate(order=order)
-    mapby = mapby.rotate(order=order)
-    mapbz = mapbz.rotate(order=order)
-print('Rotation angle = %f deg (CCW)' % -mapb.meta['crota2'])
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    mapbx = aiaprep(mapbx)
+    mapby = aiaprep(mapby)
+    mapbz = aiaprep(mapbz)
 print('(Time of rotation: %f sec)' % (time.time() - t0))
 
-# Check the center ('crpix1', 'crpix2') - First pixel is number 1.
+# Check the center ('crpix1', 'crpix2')
+# pixel number start from 1
 pcenter = ((mapbz.meta['crpix1'] - 1) * u.pix, (mapbz.meta['crpix2'] - 1) * u.pix)
 center = mapbz.pixel_to_world(*pcenter)
-print('[Image_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
+print('[Image_center]\n  (%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n  (lon, lat) = (%8.5f, %8.5f) deg' %
       ((mapbz.dimensions.x.value-1.)/2., (mapbz.dimensions.y.value-1.)/2.,
         mapbz.center.Tx.value, mapbz.center.Ty.value,
         mapbz.center.heliographic_stonyhurst.lon.value,
         mapbz.center.heliographic_stonyhurst.lat.value))
-print('[Disk_center]\n\t(%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n\t(lon, lat) = (%8.5f, %8.5f) deg' %
+print('[Disk_center]\n  (%.3f, %.3f) pixel = (%7.4f, %7.4f) arcsec\n  (lon, lat) = (%8.5f, %8.5f) deg' %
       (pcenter[0].value, pcenter[1].value,
        center.Tx.value, center.Ty.value,
        center.heliographic_stonyhurst.lon.value,
        center.heliographic_stonyhurst.lat.value))
-print('[Observation]\n\t(lon, lat, radius) = (%g deg, %g deg, %g m)' %
+print('[Observation]\n  (lon, lat, radius) = (%g deg, %g deg, %g m)' %
       (mapbz.heliographic_longitude.value,
        mapbz.heliographic_latitude.value,
        mapbz.observer_coordinate.radius.value))
 
 # Submap
-bl = SkyCoord(xmin*u.arcsec, ymin*u.arcsec, frame=mapbz.coordinate_frame)
-tr = SkyCoord(xmax*u.arcsec, ymax*u.arcsec, frame=mapbz.coordinate_frame)
-smapbx = mapbx.submap(bl, tr)
-smapby = mapby.submap(bl, tr)
-smapbz = mapbz.submap(bl, tr)
-print('\nSubmap: %s = %s arcsec' %
-      (tuple(map(int, u.Quantity(smapbz.dimensions).value)), ((xmin, xmax), (ymin, ymax))))
+subcoord = SkyCoord(xrange, yrange, frame=mapbz.coordinate_frame)
+smapbx = mapbx.submap(subcoord)
+smapby = mapby.submap(subcoord)
+smapbz = mapbz.submap(subcoord)
+print('Submap: (%s, %s) arcsec  (%d x %d)'
+      % (xrange.value, yrange.value, *smapbz.data.shape[::-1]))
 
 #======================================================================|
 # Plot
 
 fig1 = plt.figure(figsize=(8, 6), dpi=100)
 ax1 = fig1.add_subplot(111, projection=mapbz)
-plot_map(ax1, mapbz)
+plot_map(mapbz, ax=ax1, vmin=-2000., vmax=2000., grid_color='w')
 
-# Properties
-mapbz.draw_grid(axes=ax1, grid_spacing=20*u.deg, color='w', linestyle=':')
 # mapbz.draw_limb(axes=ax1, color='b', linewidth=1.5)
-mapbz.draw_rectangle(bl, (xmax-xmin)*u.arcsec, (ymax-ymin)*u.arcsec,
+mapbz.draw_rectangle(subcoord[0], xrange[1]-xrange[0], yrange[1]-yrange[0],
                      axes=ax1, color='yellow', linewidth=1.5)
-# ax1.set_title(mapbz.latex_name, y=1.05)
-plt.clim(-2000., 2000.)
+
+# Specify xlim, ylim by pixels
+# lim_arcsec = ((-1000.1, 1000.1) * u.arcsec, (-1000.1, 1000.1) * u.arcsec)
+# lim_pix = mapbz.world_to_pixel(SkyCoord(*lim_arcsec, frame=mapbz.coordinate_frame))  # pix
+# ax1.set_xlim(lim_pix[0].value)  # pix
+# ax1.set_ylim(lim_pix[1].value)  # pix
+
+# Clip NaNs
+valid_index = np.where(np.isfinite(mapbz.data))
+ax1.set_xlim((valid_index[0].min()-100, valid_index[0].max()+100))  # pix
+ax1.set_ylim((valid_index[1].min()-100, valid_index[1].max()+100))  # pix
 fig1.savefig('plothmi_disk.png', dpi=200)
 
 #----------------------------------------------------------------------|
-iskip, jskip = (12, 12)
-
 fig2 = plt.figure(figsize=(9, 6), dpi=100)
 ax2 = fig2.add_subplot(111, projection=smapbz)
-im2 = plot_map(ax2, smapbz)
-plot_vmap(ax2, smapbx, smapby, smapbz, iskip=iskip, jskip=jskip, cmin=100., vmax=500., cmap='binary',
-          scale_units='xy', scale=1/0.05, minlength=0.02)
-
-# Properties
-smapbz.draw_grid(axes=ax2, grid_spacing=10*u.deg, color='yellow', linestyle=':')
-ax2.set_title(mapbz.latex_name+' (submap)', y=1.1)
-plt.subplots_adjust(right=0.8)  # Reduce the value to move the colorbar to the right
-im2.set_clim(-2000., 2000.)
-
+im2 = plot_map(smapbz, ax=ax2, vmin=-2000., vmax=2000., grid=10*u.deg, title=mapbz.latex_name+' (submap)')
+plot_vmap(smapbx, smapby, smapbz, ax2, cmin=20., vmax=500., cmap='binary',
+          scale_units='xy', scale=1/0.05, minlength=0.02);
 fig2.savefig('plothmi_sub.png', dpi=200)
 #----------------------------------------------------------------------|
 plt.show()
