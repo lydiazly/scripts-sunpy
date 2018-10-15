@@ -64,20 +64,6 @@ def plot_map(smap, ax=None, coords=None, annotate=True, title=True, colorbar=Tru
     
     if coords is not None and isinstance(grid, bool):
         grid = False
-    if (isinstance(grid, bool) and not grid) or all(np.isnan(smap.data[:, -1])):
-        # No right yaxis label
-        _pad = 0.045  # colorbar
-        _right = 0.97  # subplots_adjust
-    else:
-        _pad = 0.12  # colorbar
-        _right = 0.99  # subplots_adjust
-    if (isinstance(grid, bool) and not grid) or all(np.isnan(smap.data[-1, :])):
-        # No top xaxis label
-        _y = 1.02  # title
-        _top = 0.9  # subplots_adjust
-    else:
-        _y = 1.12  # title
-        _top = 0.84  # subplots_adjust
     # Plot
     import matplotlib.pyplot as plt
     if coords is None:
@@ -95,18 +81,36 @@ def plot_map(smap, ax=None, coords=None, annotate=True, title=True, colorbar=Tru
     ax.set_aspect(1)
     ax.grid(False)  # rectangular grids
     grid_kw = dict(color=grid_color, ls=grid_ls, lw=grid_lw, alpha=grid_alpha)
+    _lon = _lat = 0
     if isinstance(grid, bool):
         if grid:
-            smap.draw_grid(axes=ax, zorder=90, **grid_kw)
+            _grid = smap.draw_grid(axes=ax, zorder=90, **grid_kw)
+            _grid_range = _grid.get_coord_range()
+            _lon = _grid_range[0][1] - _grid_range[0][0]
+            _lat = _grid_range[1][1] - _grid_range[1][0]
     elif isinstance(grid, u.Quantity):
         smap.draw_grid(axes=ax, grid_spacing=grid, **grid_kw)
     else:
         raise TypeError("grid should be a bool or an astropy Quantity.")
+    if (isinstance(grid, bool) and not grid) or _lat >= 180:
+        # No right yaxis label
+        _pad = 0.045  # colorbar
+        _right = 0.97  # subplots_adjust
+    else:
+        _pad = 0.12  # colorbar
+        _right = 0.99  # subplots_adjust
+    if (isinstance(grid, bool) and not grid) or _lon >= 180:
+        # No top xaxis label
+        _y = 1.02  # title
+        _top = 0.9  # subplots_adjust
+    else:
+        _y = 1.12  # title
+        _top = 0.84  # subplots_adjust
     if annotate and title:
         ax.set_title(ax.get_title(), y=_y)
     ax.set_autoscale_on(False)  # Disable autoscaling from other plots
-    plt.subplots_adjust(left=0.11, bottom=0.1, right=_right, top=_top)  # xmin,ymin,xmax,ymax (default=[0.125, 0.1, 0.9, 0.9])
-    # cax = plt.axes([0.9+0.1, 0.1, 0.03*0.8, 0.78])  # [x=(xmax+pad),y=ymin,w=ratio*(xmax-xmin),h=(ymax-ymin)]
+    plt.subplots_adjust(left=0.11, bottom=0.1, right=_right, top=_top)  # xmin,ymin,xmax,ymax (default=[0.125, 0.11, 0.9, 0.88])
+    # cax = plt.axes([_right+0.1, 0.1, 0.03*(_right-0.11), (_top-0.1)])  # [x=(xmax+pad),y=ymin,w=ratio*(xmax-xmin),h=(ymax-ymin)]
     # plt.colorbar(im, ax=ax, cax=cax)
     if colorbar:
         plt.colorbar(im, ax=ax, pad=_pad)
