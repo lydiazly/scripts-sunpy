@@ -3,12 +3,12 @@
 
 
 
-[ Blog ] **NEW!** https://lydiazly.coding.me/python-notes
+[ Blog ] https://lydiazly.github.io
 
 [ Update ]
 > *2018-10-13*&emsp;Upgrade to SunPy 0.9.3<br>
 > *2018-07-12*&emsp;Fix links in notebooks.<br>
-> *2018-07-11*&emsp;Add functions in [usr_sunpy](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)<br>
+> *2018-07-11*&emsp;Add functions in [usr_sunpy](https://github.com/lydiazly/scripts-sunpy/tree/master/modules)<br>
 > &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Add examples of Fido.<br>
 > &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Move files to blog.<br>
 > *2018-07-01*&emsp;Uploaded pdf version; modified doc
@@ -28,15 +28,9 @@ Date|Python|Sunpy|NumPy|SciPy|Matplotlib|Astropy|Pandas
 
 ---
 
-## Download
-
-    $ git clone https://git.coding.net/lydiazly/scripts-sunpy.git
-
----
-
 ## Install [SunPy](http://sunpy.org)
 
-( See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt) )
+<!-- ( See also: [sunpy_troubleshooting.txt](https://coding.net/u/lydiazly/p/scripts-sunpy/git/blob/master/sunpy_troubleshooting.txt) ) -->
 
 SunPy Installation Information:
 
@@ -51,40 +45,32 @@ SunPy Installation Information:
 
 * plothmi/example_plothmi.ipynb<br>
 [
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.ipynb)
+[Jupyter Notebook](https://github.com/lydiazly/scripts-sunpy/raw/master/plothmi/example_plothmi.ipynb)
 |
-[HTML](https://lydiazly.coding.me/python-notes/_pages/example_plothmi.html)
-|
-[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_plothmi.pdf)
+[HTML](https://github.com/lydiazly/scripts-sunpy/raw/master/plothmi/example_plothmi.html)
 ]
 
 * plothmi/example_projection.ipynb<br>
 [
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.ipynb)
+[Jupyter Notebook](https://github.com/lydiazly/scripts-sunpy/raw/master/plothmi/example_projection.ipynb)
 |
-[HTML](https://lydiazly.coding.me/python-notes/_pages/example_projection.html)
-|
-[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/plothmi/example_projection.pdf)
+[HTML](https://github.com/lydiazly/scripts-sunpy/raw/master/plothmi/example_projection.html)
 ]
 
 &emsp;&emsp;**+++ NEW! +++**
 
 * fido/fido.ipynb<br>
 [
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/fido.ipynb)
+[Jupyter Notebook](https://github.com/lydiazly/scripts-sunpy/raw/master/fido/fido.ipynb)
 |
-[HTML](https://lydiazly.coding.me/python-notes/_pages/fido.html)
-|
-[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/fido.pdf)
+[HTML](https://github.com/lydiazly/scripts-sunpy/raw/master/fido/fido.html)
 ]
 
 * fido/jsoc.ipynb<br>
 [
-[Jupyter Notebook](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.ipynb)
+[Jupyter Notebook](https://github.com/lydiazly/scripts-sunpy/raw/master/fido/jsoc.ipynb)
 |
-[HTML](https://lydiazly.coding.me/python-notes/_pages/jsoc.html)
-|
-[PDF](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.pdf)
+[HTML](https://github.com/lydiazly/scripts-sunpy/raw/master/fido/jsoc.html)
 ]
 
 Run scripts:
@@ -115,14 +101,14 @@ Shell:
     $ pydoc usr_sunpy.plot
 
 See this 
-<a href="https://lydiazly.coding.me/python-notes/usr_sunpy.html" target="_blank">
+<a href="https://lydiazly.github.io/usr_sunpy.html" target="_blank">
 documentation preview
 </a>
 .
 
 ### Import
 
-First append&ensp;[modules/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/modules)&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
+First append&ensp;[modules/](https://github.com/lydiazly/scripts-sunpy/tree/master/modules)&ensp;to&ensp;**PYTHONPATH**&ensp;in your&ensp;*~/.bashrc* :
 
 ``` sh
 export PYTHONPATH=$PYTHONPATH:<your_path>/scripts-sunpy/modules
@@ -146,4 +132,4 @@ Or add the path temporarily in python:
 >>> import usr_sunpy
 ```
 
-See examples in [plothmi/](https://coding.net/u/lydiazly/p/scripts-sunpy/git/tree/master/plothmi) ,&ensp;[fido/jsoc.ipynb](https://coding.net/u/lydiazly/p/scripts-sunpy/git/raw/master/fido/jsoc.ipynb).
+See examples in [plothmi/](https://github.com/lydiazly/scripts-sunpy/raw/master/plothmi) and&ensp;[fido/jsoc.ipynb](https://github.com/lydiazly/scripts-sunpy/raw/master/fido/jsoc.ipynb).
